@@ -1,0 +1,16 @@
+{
+    "name": "hcd-api",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "ef": "node ./scripts/ef/ef.js",
+      "start": "node ./scripts/dotnet/dotnet.js",
+      "gen": "fp gen .templates/gen.js -o ."
+    },
+    "author": "DavidLee",
+    "license": "UNLICENSED",
+    "devDependencies": {
+      "@fast-project/cli": "^0.5.8",
+      "inquirer": "^9.2.12"
+    }
+  }
