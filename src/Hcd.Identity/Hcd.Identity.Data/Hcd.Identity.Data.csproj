@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Hcd.Shared\Hcd.Shared.Common\Hcd.Shared.Common.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,41 +1,51 @@
+using System.Net;
 using Hcd.Identity.Application.Common.Interfaces.Authentication;
+using Hcd.Identity.Application.Common.Interfaces.Authentication.Account;
 using Hcd.Identity.Contracts.Authentication;
+using Hcd.Identity.Data.Entities.Authentication;
+using Hcd.Shared.Common.Exceptions;
 
 namespace Hcd.Identity.Application.Services.Authentication
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository) : IAuthenticationService
     {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator)
+        public RegisterResponse Register(RegisterRequest request)
         {
-            _jwtTokenGenerator = jwtTokenGenerator;
-        }
+            // check user exist
+            if(_userRepository.GetUserByEmail(request.Email) != null){
+                throw new DuplicateException("User exits!");
+            }
 
-        public AuthenticationResult Register(string firstName, string lastName, string email, string phoneNumber, string password)
-        {
+            var newUser = new User{
+                Id = Guid.NewGuid(),
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Password = request.Password
+            };
+            _userRepository.Add(newUser);
 
-            return new AuthenticationResult(
-                Guid.NewGuid(),
-                firstName,
-                lastName,
-                email,
-                phoneNumber,
-                "Token"
+            return new RegisterResponse(
+                newUser
             );
         }
 
-        public AuthenticationResult Login(string email, string password)
+        public LoginResponse Login(LoginRequest request)
         {
-            var userId = Guid.NewGuid();
-            var token = _jwtTokenGenerator.GeneratorToken(userId, email);
+            // check user doesn't exist
+            var user = _userRepository.GetUserByEmail(request.Email) ?? throw new NotFoundException("User not found");
+            // authorize
+            if(user.Password != request.Password){
+                throw new ArgumentException("Password Invalid");
+            }
+            var token = _jwtTokenGenerator.GeneratorToken(user.Id, request.Email);
 
-            return new AuthenticationResult(
-                Guid.NewGuid(),
-                "FirstName",
-                "LastName",
-                email,
-                "PhoneNumber",
+            return new LoginResponse(
+                user,
                 token
             );
         }

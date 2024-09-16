@@ -6,4 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hcd.Identity.Data\Hcd.Identity.Data.csproj" />
+  </ItemGroup>
 </Project>
