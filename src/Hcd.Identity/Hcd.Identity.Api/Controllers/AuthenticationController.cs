@@ -1,41 +1,27 @@
 using Hcd.Identity.Application.Services.Authentication;
-using Hcd.Identity.Contracts.Authentication;
+using Hcd.Identity.Contracts.Requests.Authentication;
 using Hcd.Identity.Data.Entities.Authentication;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hcd.Identity.Api.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController(IMediator mediator) : ControllerBase
     {
-        private readonly IAuthenticationService _authentication;
-
-        public AuthenticationController(IAuthenticationService authentication)
-        {
-            _authentication = authentication;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var authResult = _authentication.Register(request);
-
-            var response = new RegisterResponse(
-                authResult.User
-            );
-
+            var response = await _mediator.Send(request);
             return Ok(response);
         }
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var authResult = _authentication.Login(request);
-
-            var response = new LoginResponse(
-                authResult.User,
-                authResult.Token
-            );
+            var response = await _mediator.Send(request);
             return Ok(response);
         }
     }
