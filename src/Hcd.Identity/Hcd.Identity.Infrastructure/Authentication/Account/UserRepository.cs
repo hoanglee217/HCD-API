@@ -15,5 +15,34 @@ namespace Hcd.Identity.Infrastructure.Authentication.Account
         {
             return _users.SingleOrDefault(user => user.Email == email);
         }
+        // protected async Task<IActionResult> RequestAsGet<TRequest, TResponse>(TRequest request) where TRequest : IRequest<TResponse>
+        // {
+        //     var response = await Mediator.Send(request, "");
+        //     return Ok(response);
+        // }
+
+        // protected async Task<IActionResult> RequestAsCreate<TRequest, TResponse>(TRequest request) where TRequest : IRequest<TResponse>
+        // {
+        //     var response = await Mediator.Send(request);
+        //     return Created("", response);
+        // }
+
+        // protected async Task<IActionResult> RequestAsUpdate<TRequest, TResponse>(TRequest request) where TRequest : IRequest<TResponse>
+        // {
+        //     var response = await Mediator.Send(request);
+        //     return Ok(response);
+        // }
+
+        // protected async Task<IActionResult> RequestAsDelete<TRequest>(TRequest request) where TRequest : IRequest
+        // {
+        //     await Mediator.Send(request);
+        //     return Ok();
+        // }
+
+        // protected async Task<IActionResult> RequestAsAction<TRequest>(TRequest request) where TRequest : IRequest
+        // {
+        //     await Mediator.Send(request);
+        //     return Ok();
+        // }
     }
 }

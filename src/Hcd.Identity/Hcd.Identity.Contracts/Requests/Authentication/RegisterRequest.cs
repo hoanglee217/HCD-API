@@ -1,6 +1,7 @@
 using Hcd.Identity.Data.Entities.Authentication;
+using MediatR;
 
-namespace Hcd.Identity.Contracts.Authentication;
+namespace Hcd.Identity.Contracts.Requests.Authentication;
 
 public record RegisterRequest
 (
@@ -10,7 +11,8 @@ public record RegisterRequest
     string PhoneNumber,
     string Password,
     string PasswordConfirmed
-);
-public record RegisterResponse(
+) : IRequest<RegisterResponse>;
+public record RegisterResponse
+(
     User User
 );
