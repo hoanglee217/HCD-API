@@ -1,4 +1,3 @@
-using Hcd.Identity.Data.Entities.Authentication;
 using MediatR;
 
 namespace Hcd.Identity.Contracts.Requests.Authentication;
@@ -14,5 +13,8 @@ public record RegisterRequest
 ) : IRequest<RegisterResponse>;
 public record RegisterResponse
 (
-    User User
+    Guid Id,
+    string FirstName,
+    string LastName,
+    string Email
 );
