@@ -13,5 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hcd.Shared.Common\Hcd.Shared.Common.csproj" />
+    <ProjectReference Include="..\..\Hcd.Identity\Hcd.Identity.Contracts\Hcd.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\Hcd.Identity\Hcd.Identity.Data\Hcd.Identity.Data.csproj" />
   </ItemGroup>
 </Project>

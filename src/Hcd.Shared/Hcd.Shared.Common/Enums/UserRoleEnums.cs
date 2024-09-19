@@ -4,5 +4,5 @@ public enum UserRoleEnums
     Administrator = 0,
     Editor = 1,
     Customer = 2,
-    Guess = 3,
+    Guest = 3,
 }
