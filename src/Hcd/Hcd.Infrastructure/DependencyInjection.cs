@@ -1,0 +1,63 @@
+using System.Reflection;
+using System.Text;
+using Hcd.Application.Common.Interfaces.Authentication;
+using Hcd.Application.Common.Interfaces.Services;
+using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Enums;
+using Hcd.Data.Entities.Authentication;
+using Hcd.Infrastructure.Authentication;
+using Hcd.Infrastructure.Services;
+using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Hcd.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuth(configuration);
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddScoped<IPasswordHandler, PasswordHandler>();
+
+            return services;
+        }
+        public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+        {
+            var secretKey = configuration["JwtSettings:SecretKey"];
+
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "HoangCodeDao",
+                    ValidAudience = "HoangCodeDao",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
+                };
+            });
+            return services;
+        }
+         public static IServiceCollection AddMapping(this IServiceCollection services)
+        {
+            var config = TypeAdapterConfig.GlobalSettings;
+            config.NewConfig<RegisterRequest, User>()
+            .Map(dest => dest.Id, src => Guid.NewGuid())
+            .Map(dest => dest.Role, src => UserRoleEnums.Guest);
+            config.Scan(Assembly.GetExecutingAssembly());
+
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, Mapper>();
+            return services;
+        }
+    }
+}

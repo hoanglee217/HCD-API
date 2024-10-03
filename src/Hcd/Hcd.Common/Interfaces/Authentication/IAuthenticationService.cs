@@ -1,0 +1,10 @@
+using Hcd.Common.Contracts.Requests.Authentication;
+
+namespace Hcd.Common.Interface.Authentication
+{
+    public interface IAuthenticationService
+    {
+        Task<RegisterResponse> Register(RegisterRequest request, CancellationToken cancellationToken);
+        Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken);
+    }
+}

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType> <!-- Or portable if you're using cross-platform debugging -->
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hcd.Data\Hcd.Data.csproj" />
+    <ProjectReference Include="..\Hcd.Common\Hcd.Common.csproj" />
+    <ProjectReference Include="..\Hcd.Migrator\Hcd.Migrator.csproj" />
+    <ProjectReference Include="..\Hcd.Application\Hcd.Application.csproj" />
+    <ProjectReference Include="..\Hcd.Infrastructure\Hcd.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
