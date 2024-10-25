@@ -4,9 +4,9 @@ using Hcd.Common.Exceptions;
 using Hcd.Data.Entities.Authentication;
 using Hcd.Application.Common.Interfaces.Authentication;
 using System.Security.Cryptography;
-using Hcd.Application.Common.Interfaces;
 using Hcd.Common.Interface.Authentication;
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Requests.Authentication;
+using Hcd.Common.Interfaces;
 
 
 namespace Hcd.Application.Services.Authentication
@@ -56,7 +56,9 @@ namespace Hcd.Application.Services.Authentication
             
             var token = _jwtTokenGenerator.GeneratorToken(user.Id, user.Email, user.FirstName, user.LastName);
 
-            var response = new LoginResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            // var response = new LoginResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            var response = _mapper.Map<LoginResponse>(user);
+            response.Token = token;
 
             return Task.FromResult(response);
         }

@@ -1,5 +1,5 @@
 using Hcd.Application.Services.Authentication;
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Requests.Authentication;
 using Hcd.Common.Interface.Authentication;
 using MediatR;
 
