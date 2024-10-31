@@ -6,9 +6,8 @@ namespace Hcd.Api.RequestHandler.Blog;
 
 public class UpdateBlogRequestHandler(IBlogService blogService) : IRequestHandler<UpdateBlogRequest, UpdateBlogResponse>
 {
-    private readonly IBlogService _blogService = blogService;
     public async Task<UpdateBlogResponse> Handle(UpdateBlogRequest request, CancellationToken cancellationToken)
     {
-        return await _blogService.UpdateBlog(request, cancellationToken);
+        return await blogService.UpdateBlog(request, cancellationToken);
     }
 }

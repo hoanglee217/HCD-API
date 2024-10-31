@@ -8,47 +8,45 @@ using MapsterMapper;
 namespace Hcd.Application.Services.Management
 {
     public class TagService(
-        IRepository<Tag> tagRepository,
+        IRepository<Tag> categoryRepository,
         IMapper mapper
     ) : ITagService
     {
-        private readonly IRepository<Tag> _tagRepository = tagRepository;
+        private readonly IRepository<Tag> _categoryRepository = categoryRepository;
         private readonly IMapper _mapper = mapper;
-        public Task<CreateTagResponse> CreateTag(CreateTagRequest request, CancellationToken cancellationToken)
+        public async Task<CreateTagResponse> CreateTag(CreateTagRequest request, CancellationToken cancellationToken)
         {
             var newTag = request.Adapt<Tag>();
-            _tagRepository.Add(newTag);
+            await _categoryRepository.AddAsync(newTag);
             var response = _mapper.Map<CreateTagResponse>(newTag);
-            return Task.FromResult(response);
+            return response;
         }
 
-        public Task DeleteTag(DeleteTagRequest request, CancellationToken cancellationToken)
+        public async Task DeleteTag(DeleteTagRequest request, CancellationToken cancellationToken)
         {
-            _tagRepository.Delete(request.Id);
-            throw new NotImplementedException();
+            await _categoryRepository.DeleteAsync(request.Id);
         }
 
-        public Task<GetAllTagsResponse> GetAllTags(GetAllTagsRequest request, CancellationToken cancellationToken)
+        public async Task<List<GetAllTagsResponse>> GetAllTags(GetAllTagsRequest request, CancellationToken cancellationToken)
         {
-            var tag = _tagRepository.GetAll();
-            var response = _mapper.Map<GetAllTagsResponse>(tag);
-            return Task.FromResult(response);
+            var category = await _categoryRepository.GetAllAsync();
+            var response = _mapper.Map<List<GetAllTagsResponse>>(category);
+            return response;
         }
 
-        public Task<GetDetailTagResponse> GetDetailTag(GetDetailTagRequest request, CancellationToken cancellationToken)
+        public async Task<GetDetailTagResponse> GetDetailTag(GetDetailTagRequest request, CancellationToken cancellationToken)
         {
-            var tag = _tagRepository.GetById(request.Id);
-            var response = _mapper.Map<GetDetailTagResponse>(tag);
-            return Task.FromResult(response);
+            var category = await _categoryRepository.GetByIdAsync(request.Id);
+            var response = _mapper.Map<GetDetailTagResponse>(category);
+            return response;
         }
 
-        public Task<UpdateTagResponse> UpdateTag(UpdateTagRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateTagResponse> UpdateTag(UpdateTagRequest request, CancellationToken cancellationToken)
         {
-            
-            var tag = request.Adapt<Tag>();
-            _tagRepository.Update(tag);
-            var response = _mapper.Map<UpdateTagResponse>(tag);
-            return Task.FromResult(response);
+            var category = request.Adapt<Tag>();
+            await _categoryRepository.UpdateAsync(category);
+            var response = _mapper.Map<UpdateTagResponse>(category);
+            return response;
         }
     }
 }

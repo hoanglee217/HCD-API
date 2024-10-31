@@ -4,6 +4,7 @@ using Hcd.Migrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hcd.Migrator.Migrations
 {
     [DbContext(typeof(MigratorDbContext))]
-    partial class MigratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241025231530_updateCategoryTableV2")]
+    partial class updateCategoryTableV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,6 +220,9 @@ namespace Hcd.Migrator.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("char(36)");
 
@@ -262,6 +268,9 @@ namespace Hcd.Migrator.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("char(36)");

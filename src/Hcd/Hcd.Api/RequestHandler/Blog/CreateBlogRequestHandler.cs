@@ -6,9 +6,8 @@ namespace Hcd.Api.RequestHandler.Blog;
 
 public class CreateBlogRequestHandler(IBlogService blogService) : IRequestHandler<CreateBlogRequest, CreateBlogResponse>
 {
-    private readonly IBlogService _blogService = blogService;
     public async Task<CreateBlogResponse> Handle(CreateBlogRequest request, CancellationToken cancellationToken)
     {
-        return await _blogService.CreateBlog(request, cancellationToken);
+        return await blogService.CreateBlog(request, cancellationToken);
     }
 }

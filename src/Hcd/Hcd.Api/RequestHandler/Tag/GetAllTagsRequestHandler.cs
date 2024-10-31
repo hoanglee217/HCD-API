@@ -4,9 +4,9 @@ using MediatR;
 
 namespace Hcd.Api.RequestHandler.Tag;
 
-public class GetAllTagsRequestHandler(ITagService tagService) : IRequestHandler<GetAllTagsRequest, GetAllTagsResponse>
+public class GetAllTagsRequestHandler(ITagService tagService) : IRequestHandler<GetAllTagsRequest, List<GetAllTagsResponse>>
 {
-    public async Task<GetAllTagsResponse> Handle(GetAllTagsRequest request, CancellationToken cancellationToken)
+    public async Task<List<GetAllTagsResponse>> Handle(GetAllTagsRequest request, CancellationToken cancellationToken)
     {
         return await tagService.GetAllTags(request, cancellationToken);
     }

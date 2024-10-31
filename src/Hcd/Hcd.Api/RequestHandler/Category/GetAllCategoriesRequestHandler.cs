@@ -4,11 +4,10 @@ using MediatR;
 
 namespace Hcd.Api.RequestHandler.Category;
 
-public class GetAllCategoriesRequestHandler(ICategoryService categoryService) : IRequestHandler<GetAllCategoriesRequest, GetAllCategoriesResponse>
+public class GetAllCategoriesRequestHandler(ICategoryService categoryService) : IRequestHandler<GetAllCategoriesRequest, List<GetAllCategoriesResponse>>
 {
-    private readonly ICategoryService _categoryService = categoryService;
-    public async Task<GetAllCategoriesResponse> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
+    public async Task<List<GetAllCategoriesResponse>> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
     {
-        return await _categoryService.GetAllCategories(request, cancellationToken);
+        return await categoryService.GetAllCategories(request, cancellationToken);
     }
 }

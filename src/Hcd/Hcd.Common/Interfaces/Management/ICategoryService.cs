@@ -4,7 +4,7 @@ namespace Hcd.Common.Interfaces.Management
 {
     public interface ICategoryService
     {
-        Task<GetAllCategoriesResponse> GetAllCategories(GetAllCategoriesRequest request, CancellationToken cancellationToken);
+        Task<List<GetAllCategoriesResponse>> GetAllCategories(GetAllCategoriesRequest request, CancellationToken cancellationToken);
         Task<GetDetailCategoryResponse> GetDetailCategory(GetDetailCategoryRequest request, CancellationToken cancellationToken);
         Task<CreateCategoryResponse> CreateCategory(CreateCategoryRequest request, CancellationToken cancellationToken);
         Task<UpdateCategoryResponse> UpdateCategory(UpdateCategoryRequest request, CancellationToken cancellationToken);

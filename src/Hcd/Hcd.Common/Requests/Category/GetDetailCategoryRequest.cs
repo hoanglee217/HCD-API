@@ -3,15 +3,16 @@ using MediatR;
 
 namespace Hcd.Common.Requests.Category;
 
-public class GetAllCategoriesRequest : IRequest<GetAllCategoriesResponse>
+public class GetDetailCategoryRequest : IRequest<GetDetailCategoryResponse>
 {
+    public Guid Id { get; set; }
 };
-public class GetAllCategoriesResponse
+public class GetDetailCategoryResponse
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid PostId { get; set; }
+    public Guid BlogId { get; set; }
 };

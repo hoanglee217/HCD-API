@@ -23,7 +23,18 @@ namespace Hcd.Application.Services
             _dbSet = _context.Set<T>();
         }
 
-        public void Add(T entity)
+        public async Task<List<T>> GetAllAsync()
+        {
+            return await _dbSet.Where(o => !o.IsDeleted).ToListAsync();
+        }
+
+        public async Task<T> GetByIdAsync(Guid id)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted);
+            return entity ?? throw new NotFoundException(id + " not found!");
+        }
+
+        public async Task AddAsync(T entity)
         {
             if (entity is BaseEntity baseEntity)
             {
@@ -31,47 +42,41 @@ namespace Hcd.Application.Services
                 baseEntity.CreatedDate = _dateTimeProvider.UtcNow;
             }
             _dbSet.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            var entity = await _dbSet.FirstOrDefaultAsync(o => o.Id == id) ?? throw new NotFoundException($"Entity with ID {id} not found.");
+            var existingEntity = await GetByIdAsync(id);
 
             // Set soft delete properties
-            if (entity is BaseEntity baseEntity)
+            if (existingEntity is BaseEntity baseEntity)
             {
                 baseEntity.IsDeleted = true;
                 baseEntity.DeletedDate = _dateTimeProvider.UtcNow;
                 baseEntity.DeletedBy = _currentUserService.GetCurrentUserId();
             }
 
-            _dbSet.Update(entity);
-            _context.SaveChanges();
+            _dbSet.Update(existingEntity);
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task UpdateAsync(T entity)
         {
-            return _dbSet.Where(o => !o.IsDeleted).ToList();
-        }
+            var existingEntity = await GetByIdAsync(entity.Id);
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
 
-        public T GetById(Guid id)
-        {
-            return _dbSet.Where(o => o.Id == id && !o.IsDeleted).FirstOrDefault() ?? throw new NotFoundException(id + " not found!");
-        }
-
-        public void Update(T entity)
-        {
-            var existingEntity = _dbSet.FirstOrDefault(o => o.Id == entity.Id) ?? throw new NotFoundException(entity.Id + " not found!");
-
-            if (entity is BaseEntity baseEntity)
+            if (existingEntity is BaseEntity baseEntity)
             {
                 baseEntity.UpdatedDate = _dateTimeProvider.UtcNow;
                 baseEntity.UpdatedBy = _currentUserService.GetCurrentUserId();
             }
 
+            _context.Entry(existingEntity).Property(e => ((BaseEntity)e).CreatedDate).IsModified = false;
+            _context.Entry(existingEntity).Property(e => ((BaseEntity)e).CreatedBy).IsModified = false;
+
             _dbSet.Update(existingEntity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

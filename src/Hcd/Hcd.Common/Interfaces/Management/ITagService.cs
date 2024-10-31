@@ -4,7 +4,7 @@ namespace Hcd.Common.Interfaces.Management
 {
     public interface ITagService
     {
-        Task<GetAllTagsResponse> GetAllTags(GetAllTagsRequest request, CancellationToken cancellationToken);
+        Task<List<GetAllTagsResponse>> GetAllTags(GetAllTagsRequest request, CancellationToken cancellationToken);
         Task<GetDetailTagResponse> GetDetailTag(GetDetailTagRequest request, CancellationToken cancellationToken);
         Task<CreateTagResponse> CreateTag(CreateTagRequest request, CancellationToken cancellationToken);
         Task<UpdateTagResponse> UpdateTag(UpdateTagRequest request, CancellationToken cancellationToken);

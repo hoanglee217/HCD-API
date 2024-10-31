@@ -16,42 +16,42 @@ namespace Hcd.Application.Services.Management
     {
         private readonly IRepository<Blog> _blogRepository = blogRepository;
         private readonly IMapper _mapper = mapper;
-        public Task<CreateBlogResponse> CreateBlog(CreateBlogRequest request, CancellationToken cancellationToken)
+
+        public async Task<List<GetAllBlogsResponse>> GetAllBlogs(GetAllBlogsRequest request, CancellationToken cancellationToken)
+        {
+            var blog = await _blogRepository.GetAllAsync();
+            var response = _mapper.Map<List<GetAllBlogsResponse>>(blog);
+            return response;
+        }
+
+        public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request, CancellationToken cancellationToken)
+        {
+            var blog = await _blogRepository.GetByIdAsync(request.Id);
+            var response = _mapper.Map<GetDetailBlogsResponse>(blog);
+            return response;
+        }
+        
+        public async Task<CreateBlogResponse> CreateBlog(CreateBlogRequest request, CancellationToken cancellationToken)
         {
             var newBlog = request.Adapt<Blog>();
             newBlog.UserId = currentUserService!.GetCurrentUserId();
-            _blogRepository.Add(newBlog);
+            await _blogRepository.AddAsync(newBlog);
             var response = _mapper.Map<CreateBlogResponse>(newBlog);
-            return Task.FromResult(response);
+            return response;
         }
 
         public async Task DeleteBlog(DeleteBlogRequest request, CancellationToken cancellationToken)
         {
-            await _blogRepository.Delete(request.Id);
+            await _blogRepository.DeleteAsync(request.Id);
         }
 
-        public Task<List<GetAllBlogsResponse>> GetAllBlogs(GetAllBlogsRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateBlogResponse> UpdateBlog(UpdateBlogRequest request, CancellationToken cancellationToken)
         {
-            var blog = _blogRepository.GetAll();
-            var response = _mapper.Map<List<GetAllBlogsResponse>>(blog);
-            return Task.FromResult(response);
-        }
-
-        public Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request, CancellationToken cancellationToken)
-        {
-            var blog = _blogRepository.GetById(request.Id);
-            var response = _mapper.Map<GetDetailBlogsResponse>(blog);
-            return Task.FromResult(response);
-        }
-
-        public Task<UpdateBlogResponse> UpdateBlog(UpdateBlogRequest request, CancellationToken cancellationToken)
-        {
-            
             var blog = request.Adapt<Blog>();
             blog.UserId = currentUserService!.GetCurrentUserId();
-            _blogRepository.Update(blog);
+            await _blogRepository.UpdateAsync(blog);
             var response = _mapper.Map<UpdateBlogResponse>(blog);
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

@@ -8,25 +8,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hcd.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [Authorize]
     public class CategoryController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories(GetAllCategoriesRequest request)
+        public async Task<ActionResult<List<Category>>> GetAllCategories([FromQuery] GetAllCategoriesRequest request)
         {
             var response = await _mediator.Send(request);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategoryById(Guid? id, GetDetailCategoryRequest request)
+        public async Task<ActionResult<Category>> GetDetailCategory(Guid id)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Category id not found!");
-            }
+            var request = new GetDetailCategoryRequest { Id = id };
             var response = await _mediator.Send(request);
             return Ok(response);
         }
@@ -39,23 +36,17 @@ namespace Hcd.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid? id, [FromBody] UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequest request)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Category id not found!");
-            }
+            request.Id = id;
             var response = await _mediator.Send(request);
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(Guid? id, DeleteCategoryRequest request)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Category id not found!");
-            }
+            var request = new DeleteCategoryRequest { Id = id };
             await _mediator.Send(request);
             return Ok();
         }

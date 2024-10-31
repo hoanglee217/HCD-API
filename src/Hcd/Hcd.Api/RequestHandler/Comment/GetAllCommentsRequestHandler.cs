@@ -4,11 +4,10 @@ using MediatR;
 
 namespace Hcd.Api.RequestHandler.Comment;
 
-public class GetAllCommentsRequestHandler(ICommentService commentService) : IRequestHandler<GetAllCommentsRequest, GetAllCommentsResponse>
+public class GetAllCommentsRequestHandler(ICommentService commentService) : IRequestHandler<GetAllCommentsRequest, List<GetAllCommentsResponse>>
 {
-    private readonly ICommentService _commentService = commentService;
-    public async Task<GetAllCommentsResponse> Handle(GetAllCommentsRequest request, CancellationToken cancellationToken)
+    public async Task<List<GetAllCommentsResponse>> Handle(GetAllCommentsRequest request, CancellationToken cancellationToken)
     {
-        return await _commentService.GetAllComments(request, cancellationToken);
+        return await commentService.GetAllComments(request, cancellationToken);
     }
 }

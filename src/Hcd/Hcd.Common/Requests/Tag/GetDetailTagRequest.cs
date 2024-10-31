@@ -10,5 +10,5 @@ public class GetDetailTagResponse
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
-    public Guid PostId  {get; set; }
+    public Guid BlogId  {get; set; }
 };

@@ -4,6 +4,7 @@ using Hcd.Migrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hcd.Migrator.Migrations
 {
     [DbContext(typeof(MigratorDbContext))]
-    partial class MigratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031110012_ChangePostIdToBlogId")]
+    partial class ChangePostIdToBlogId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

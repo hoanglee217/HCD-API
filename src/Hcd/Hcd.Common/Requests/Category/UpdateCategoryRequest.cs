@@ -5,11 +5,12 @@ namespace Hcd.Common.Requests.Category;
 
 public class UpdateCategoryRequest : IRequest<UpdateCategoryResponse>
 {
+    public Guid Id { get; set; }
     public required string Name { get; set; }
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid PostId { get; set; }
+    public Guid BlogId { get; set; }
 };
 public class UpdateCategoryResponse
 {
@@ -18,5 +19,5 @@ public class UpdateCategoryResponse
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid PostId { get; set; }
+    public Guid BlogId { get; set; }
 };

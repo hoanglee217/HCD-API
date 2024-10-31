@@ -4,7 +4,7 @@ namespace Hcd.Common.Interfaces.Management
 {
     public interface ICommentService
     {
-        Task<GetAllCommentsResponse> GetAllComments(GetAllCommentsRequest request, CancellationToken cancellationToken);
+        Task<List<GetAllCommentsResponse>> GetAllComments(GetAllCommentsRequest request, CancellationToken cancellationToken);
         Task<GetDetailCommentResponse> GetDetailComment(GetDetailCommentRequest request, CancellationToken cancellationToken);
         Task<CreateCommentResponse> CreateComment(CreateCommentRequest request, CancellationToken cancellationToken);
         Task<UpdateCommentResponse> UpdateComment(UpdateCommentRequest request, CancellationToken cancellationToken);

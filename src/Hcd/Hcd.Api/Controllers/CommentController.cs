@@ -8,25 +8,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hcd.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/comments")]
     [Authorize]
     public class CommentController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetAllComments(GetAllCommentsRequest request)
+        public async Task<ActionResult<List<Comment>>> GetAllComments([FromQuery] GetAllCommentsRequest request)
         {
             var response = await _mediator.Send(request);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetCommentById(Guid? id, GetDetailCommentRequest request)
+        public async Task<ActionResult<Comment>> GetDetailComment(Guid id)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Comment id not found!");
-            }
+            var request = new GetDetailCommentRequest { Id = id };
             var response = await _mediator.Send(request);
             return Ok(response);
         }
@@ -39,23 +36,17 @@ namespace Hcd.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateComment(Guid? id, [FromBody] UpdateCommentRequest request)
+        public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentRequest request)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Comment id not found!");
-            }
+            request.Id = id;
             var response = await _mediator.Send(request);
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(Guid? id, DeleteCommentRequest request)
+        public async Task<IActionResult> DeleteComment(Guid id)
         {
-            if (id == null)
-            {
-                throw new NotFoundException("Comment id not found!");
-            }
+            var request = new DeleteCommentRequest { Id = id };
             await _mediator.Send(request);
             return Ok();
         }
