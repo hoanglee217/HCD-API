@@ -2,7 +2,8 @@ using System.Reflection;
 using System.Text;
 using Hcd.Application.Common.Interfaces.Authentication;
 using Hcd.Application.Common.Interfaces.Services;
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common;
+using Hcd.Common.Requests.Authentication;
 using Hcd.Common.Enums;
 using Hcd.Data.Entities.Authentication;
 using Hcd.Infrastructure.Authentication;
@@ -28,8 +29,6 @@ namespace Hcd.Infrastructure
         }
         public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
         {
-            var secretKey = configuration["JwtSettings:SecretKey"];
-
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -40,9 +39,9 @@ namespace Hcd.Infrastructure
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "HoangCodeDao",
-                    ValidAudience = "HoangCodeDao",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
+                    ValidIssuer = Env.JwtIssuer,
+                    ValidAudience = Env.JwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Env.JwtSecret!))
                 };
             });
             return services;

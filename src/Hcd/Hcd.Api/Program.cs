@@ -6,9 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Hcd.Application.Common.Interfaces;
 using Hcd.Application.Common.Services;
 using Hcd.Data;
+using Hcd.Common;
+using Hcd.Common.Interfaces;
+using Hcd.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    EnvLoader.LoadEnv();
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
     builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -24,10 +28,9 @@ var builder = WebApplication.CreateBuilder(args);
     // Add services to the container.
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseMySql(
-            builder.Configuration.GetConnectionString("DefaultConnection"),
-            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+            Env.ConnectionString,
+            ServerVersion.AutoDetect(Env.ConnectionString)
     ));
-   
     //controller
     builder.Services.AddControllers();
 }

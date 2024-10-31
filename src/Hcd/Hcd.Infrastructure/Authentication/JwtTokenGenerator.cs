@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Hcd.Application.Common.Interfaces.Authentication;
 using Hcd.Application.Common.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
+using Hcd.Common;
 
 namespace Hcd.Infrastructure.Authentication
 {
@@ -15,17 +16,8 @@ namespace Hcd.Infrastructure.Authentication
 
         public string GeneratorToken(Guid userId, string email, string? firstName, string? lastName)
         {
-            var secretKey = _configuration["JwtSettings:SecretKey"];
-            var issuer = _configuration["JwtSettings:Issuer"];
-            var audience = _configuration["JwtSettings:Audience"];
-
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new Exception("Secret key not found.");
-            }
-
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(secretKey);
+            var key = Encoding.UTF8.GetBytes(Env.JwtSecret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -37,9 +29,9 @@ namespace Hcd.Infrastructure.Authentication
                     new Claim(JwtRegisteredClaimNames.FamilyName, firstName ?? ""),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
-                Expires = _dateTimeProvider.UtcNow.AddDays(1),
-                Issuer = "HoangCodeDao",
-                Audience = "HoangCodeDao",
+                Expires = _dateTimeProvider.UtcNow.AddMinutes(Env.JwtExpiration),
+                Issuer = Env.JwtIssuer,
+                Audience = Env.JwtAudience,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature

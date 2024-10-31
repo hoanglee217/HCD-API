@@ -1,5 +1,6 @@
 using Hcd.Data.Entities.Authentication;
 using Hcd.Common.Enums;
+using Hcd.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +19,8 @@ namespace Hcd.Api.Controllers
                 new User
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = "John",
-                    LastName = "Doe",
+                    FirstName = Env.ConnectionString,
+                    LastName = Env.JwtAudience,
                     Email = "john.doe@example.com",
                     PhoneNumber = "+1234567890",
                     Password = "password123",
@@ -55,7 +56,7 @@ namespace Hcd.Api.Controllers
                     Role = UserRoleEnums.Guest
                 }
             };
-            
+
             return Ok(blogs);
         }
     }

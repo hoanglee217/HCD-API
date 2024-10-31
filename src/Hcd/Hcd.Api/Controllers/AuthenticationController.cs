@@ -1,4 +1,4 @@
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Requests.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

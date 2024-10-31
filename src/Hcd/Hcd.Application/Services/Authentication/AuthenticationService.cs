@@ -4,9 +4,9 @@ using Hcd.Common.Exceptions;
 using Hcd.Data.Entities.Authentication;
 using Hcd.Application.Common.Interfaces.Authentication;
 using System.Security.Cryptography;
-using Hcd.Application.Common.Interfaces;
 using Hcd.Common.Interface.Authentication;
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Requests.Authentication;
+using Hcd.Common.Interfaces;
 
 
 namespace Hcd.Application.Services.Authentication
@@ -23,13 +23,11 @@ namespace Hcd.Application.Services.Authentication
         private readonly IRepository<User> _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
 
-        public Task<RegisterResponse> Register(RegisterRequest request, CancellationToken cancellationToken)
+        public async Task<RegisterResponse> Register(RegisterRequest request, CancellationToken cancellationToken)
         {
             // check user exist
-            if (_userRepository.GetAll().FirstOrDefault(o => o.Email == request.Email) != null)
-            {
-                throw new DuplicateException("User exits!");
-            }
+            var users = await _userRepository.GetAllAsync();
+            var user = users.FirstOrDefault(o => o.Email == request.Email) ?? throw new DuplicateException("User exits!");
             // Generate a salt using RandomNumberGenerator
             byte[] salt = new byte[16];
             RandomNumberGenerator.Fill(salt);
@@ -37,28 +35,31 @@ namespace Hcd.Application.Services.Authentication
             var newUser = request.Adapt<User>();
             newUser.Salt = salt;
             newUser.Password = _passwordHandler.HashPassword(request.Password, salt);
-            _userRepository.Add(newUser);
+            await _userRepository.AddAsync(newUser);
 
             var response = _mapper.Map<RegisterResponse>(newUser);
-            return Task.FromResult(response);
+            return response;
         }
 
-        public Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken)
         {
             // check user doesn't exist
-            var user = _userRepository.GetAll().FirstOrDefault(o => o.Email == request.Email) ?? throw new NotFoundException("User not found");
+            var users = await _userRepository.GetAllAsync();
+            var user = users.FirstOrDefault(o => o.Email == request.Email) ?? throw new NotFoundException("User not found");
             // authorize
             var passwordRequest = _passwordHandler.HashPassword(request.Password, user.Salt!);
             if (user.Password != passwordRequest)
             {
                 throw new ArgumentException("Password Invalid");
             }
-            
+
             var token = _jwtTokenGenerator.GeneratorToken(user.Id, user.Email, user.FirstName, user.LastName);
 
-            var response = new LoginResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            // var response = new LoginResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            var response = _mapper.Map<LoginResponse>(user);
+            response.Token = token;
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

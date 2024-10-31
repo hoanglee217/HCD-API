@@ -1,4 +1,4 @@
-using Hcd.Common.Contracts.Requests.Authentication;
+using Hcd.Common.Requests.Authentication;
 
 namespace Hcd.Common.Interface.Authentication
 {
