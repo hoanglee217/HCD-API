@@ -8,12 +8,14 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        var connectionString = EnvMigrateLoader.LoadMigrateEnv();
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
             {
                 services.AddDbContext<MigratorDbContext>(options =>
                     options.UseMySql(
-                        ServerVersion.AutoDetect(Env.ConnectionString)
+                        connectionString,
+                        ServerVersion.AutoDetect(connectionString)
                     ));
             })
             .Build();

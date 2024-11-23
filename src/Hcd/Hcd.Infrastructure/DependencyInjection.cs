@@ -39,9 +39,9 @@ namespace Hcd.Infrastructure
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Env.JwtIssuer,
-                    ValidAudience = Env.JwtAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Env.JwtSecret!))
+                    ValidIssuer = EnvGlobal.JwtIssuer,
+                    ValidAudience = EnvGlobal.JwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EnvGlobal.JwtSecret!))
                 };
             });
             return services;

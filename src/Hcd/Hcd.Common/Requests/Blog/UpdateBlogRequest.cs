@@ -10,6 +10,8 @@ public class UpdateBlogRequest : IRequest<UpdateBlogResponse>
     public string? Thumbnail { get; set; }
     public int? Rating { get; set; }
     public string? Slug { get; set; }
+    public required Guid CategoryId { get; set; }
+    public required Guid UserId { get; set; }
 };
 public class UpdateBlogResponse
 {
@@ -19,4 +21,6 @@ public class UpdateBlogResponse
     public string? Thumbnail { get; set; }
     public int? Rating { get; set; }
     public string? Slug { get; set; }
+    public required Guid CategoryId { get; set; }
+    public required Guid UserId { get; set; }
 };

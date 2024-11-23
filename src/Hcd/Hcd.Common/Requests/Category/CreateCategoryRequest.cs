@@ -9,7 +9,6 @@ public class CreateCategoryRequest : IRequest<CreateCategoryResponse>
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid BlogId { get; set; }
 };
 public class CreateCategoryResponse
 {
@@ -18,5 +17,4 @@ public class CreateCategoryResponse
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid BlogId { get; set; }
 };

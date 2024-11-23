@@ -28,15 +28,28 @@ var builder = WebApplication.CreateBuilder(args);
     // Add services to the container.
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseMySql(
-            Env.ConnectionString,
-            ServerVersion.AutoDetect(Env.ConnectionString)
+            EnvGlobal.ConnectionString,
+            ServerVersion.AutoDetect(EnvGlobal.ConnectionString)
     ));
     //controller
     builder.Services.AddControllers();
+
+    // Enable CORS
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")  // Allow the React frontend
+                .AllowAnyHeader()  // Allow all headers
+                .AllowAnyMethod(); // Allow all HTTP methods (GET, POST, etc.)
+        });
+    });
 }
 
 var app = builder.Build();
 {
+    // Use CORS middleware
+    app.UseCors("AllowFrontend");
     app.UseExceptionHandler(opt => { });
     app.UseHttpsRedirection();
     app.UseAuthentication();

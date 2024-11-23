@@ -9,7 +9,5 @@ namespace Hcd.Data.Entities.Management.Blog
         public int Position { get; set; }
         public Guid? ParentId { get; set; }
         public CategoryEnums CategoryEnums { get; set; } 
-        public required Guid BlogId { get; set; }
-        public virtual required Blog Blog{ get; set; }
     }
 }

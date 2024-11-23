@@ -17,7 +17,7 @@ namespace Hcd.Infrastructure.Authentication
         public string GeneratorToken(Guid userId, string email, string? firstName, string? lastName)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(Env.JwtSecret);
+            var key = Encoding.UTF8.GetBytes(EnvGlobal.JwtSecret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -29,9 +29,9 @@ namespace Hcd.Infrastructure.Authentication
                     new Claim(JwtRegisteredClaimNames.FamilyName, firstName ?? ""),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
-                Expires = _dateTimeProvider.UtcNow.AddMinutes(Env.JwtExpiration),
-                Issuer = Env.JwtIssuer,
-                Audience = Env.JwtAudience,
+                Expires = _dateTimeProvider.UtcNow.AddMinutes(EnvGlobal.JwtExpiration),
+                Issuer = EnvGlobal.JwtIssuer,
+                Audience = EnvGlobal.JwtAudience,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature

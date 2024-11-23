@@ -14,5 +14,4 @@ public class GetDetailCategoryResponse
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
-    public Guid BlogId { get; set; }
 };

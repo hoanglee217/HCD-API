@@ -4,7 +4,7 @@ namespace Hcd.Common
     {
         public static void LoadEnv()
         {
-            string filePath = "../../../.env";
+            string filePath = ".env";
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException($"The .env file was not found at path: {filePath}");

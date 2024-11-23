@@ -19,8 +19,8 @@ namespace Hcd.Api.Controllers
                 new User
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = Env.ConnectionString,
-                    LastName = Env.JwtAudience,
+                    FirstName = EnvGlobal.ConnectionString,
+                    LastName = EnvGlobal.JwtAudience,
                     Email = "john.doe@example.com",
                     PhoneNumber = "+1234567890",
                     Password = "password123",

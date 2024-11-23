@@ -1,4 +1,5 @@
 using Hcd.Common;
+using Hcd.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -8,12 +9,10 @@ namespace Hcd.Migrator
     {
         public MigratorDbContext CreateDbContext(string[] args)
         {
-            EnvLoader.LoadEnv();
-
+            var connectionString = EnvMigrateLoader.LoadMigrateEnv();
             var optionsBuilder = new DbContextOptionsBuilder<MigratorDbContext>();
-            optionsBuilder.UseMySql(
-                Env.ConnectionString, 
-                ServerVersion.AutoDetect(Env.ConnectionString));
+
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
             return new MigratorDbContext(optionsBuilder.Options);
         }

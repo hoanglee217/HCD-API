@@ -27,7 +27,10 @@ namespace Hcd.Application.Services.Authentication
         {
             // check user exist
             var users = await _userRepository.GetAllAsync();
-            var user = users.FirstOrDefault(o => o.Email == request.Email) ?? throw new DuplicateException("User exits!");
+            var user = users.FirstOrDefault(o => o.Email == request.Email);
+            if (user != null) { 
+                throw new DuplicateException("User exits!");
+            };
             // Generate a salt using RandomNumberGenerator
             byte[] salt = new byte[16];
             RandomNumberGenerator.Fill(salt);
