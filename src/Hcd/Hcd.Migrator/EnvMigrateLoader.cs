@@ -6,7 +6,7 @@ namespace Hcd.Common
     {
         public static string LoadMigrateEnv()
         {
-            string filePath = ".env";
+            string filePath = File.Exists(".env") ? ".env" : "../../../.env"; 
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException($"The .env file was not found at path: {filePath}");

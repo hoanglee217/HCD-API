@@ -31,7 +31,7 @@ askQuestions()
             project
         } = answers;
 
-        const command = `dotnet run --project ${project}`;
+        const command = `dotnet run --project ${project} --launch-profile "Development"`;
         console.log(command);
         execSync(command, { stdio: 'inherit' });
     });
