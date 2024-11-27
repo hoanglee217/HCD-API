@@ -10,12 +10,12 @@ services:
   db:
     image: mysql:latest
     environment:
-      - MYSQL_HOST=${DB_HOST}
       - MYSQL_PORT=${DB_PORT}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=0901
+    network_mode: host
     volumes:
       - db-data:/var/lib/mysql
     ports:
