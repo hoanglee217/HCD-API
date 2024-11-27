@@ -14,7 +14,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet restore src/Hcd/Hcd.Api
 
 # Expose the port your application listens on
-EXPOSE 5000
+EXPOSE 5555
 
 # Run the application
 CMD ["dotnet", "run", "--project", "src/Hcd/Hcd.Api", "--launch-profile", "Production"]
