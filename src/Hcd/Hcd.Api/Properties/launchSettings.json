@@ -14,18 +14,18 @@
       "environmentVariables": {
         "NETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5000;"
+      "applicationUrl": "http://localhost:5555;"
     },
     "Production": {
       "commandName": "Project",
       "environmentVariables": {
         "NETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://0.0.0.0:5000;"
+      "applicationUrl": "http://0.0.0.0:5555;"
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "applicationUrl": "http://localhost:5000;",
+      "applicationUrl": "http://localhost:5555;",
       "environmentVariables": {
         "NETCORE_ENVIRONMENT": "Development"
       }
