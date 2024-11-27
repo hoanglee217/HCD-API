@@ -1,5 +1,4 @@
 using Hcd.Common;
-using Hcd.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
