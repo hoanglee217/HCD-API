@@ -6,41 +6,66 @@ using Hcd.Application.Common.Interfaces.Authentication;
 using Hcd.Application.Common.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Hcd.Common;
+using Hcd.Common.Requests.Token;
+using MapsterMapper;
+using Hcd.Common.Exceptions;
 
 namespace Hcd.Infrastructure.Authentication
 {
-    public class JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IConfiguration configuration) : IJwtTokenGenerator
+    public class JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IConfiguration configuration, IMapper mapper) : IJwtTokenGenerator
     {
         public readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
         public readonly IConfiguration _configuration = configuration;
+        public readonly IMapper _mapper = mapper;
 
-        public string GeneratorToken(Guid userId, string email, string? firstName, string? lastName)
+        public string GeneratorToken(GeneratorTokenPayload payload, string signingCredentials, int expiration)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingCredentials));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, payload.UserId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, payload.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            var tokenDescription = new JwtSecurityToken(
+                issuer: EnvGlobal.JwtIssuer,
+                audience: EnvGlobal.JwtAudience,
+                claims: claims,
+                expires: _dateTimeProvider.UtcNow.AddSeconds(expiration),
+                signingCredentials: credentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescription);
+        }
+
+        public ClaimsPrincipal VerifyRefreshToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(EnvGlobal.JwtSecret);
+            var key = Encoding.UTF8.GetBytes(EnvGlobal.JwtRefreshSecret);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var validationParameters = new TokenValidationParameters
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, email),
-                    new Claim(JwtRegisteredClaimNames.GivenName, lastName ?? ""),
-                    new Claim(JwtRegisteredClaimNames.FamilyName, firstName ?? ""),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
-                Expires = _dateTimeProvider.UtcNow.AddMinutes(EnvGlobal.JwtExpiration),
-                Issuer = EnvGlobal.JwtIssuer,
-                Audience = EnvGlobal.JwtAudience,
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature
-                )
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = EnvGlobal.JwtIssuer,
+                ValidAudience = EnvGlobal.JwtAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token).ToString();
+            try
+            {
+                var response = tokenHandler.ValidateToken(token, validationParameters, out _);
+                return response;
+            }
+            catch (Exception)
+            {
+                throw new UnauthorizedException($"Refresh token invalid");
+            }
         }
     }
 }

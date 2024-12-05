@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Hcd.Common.Exceptions;
 
 namespace Hcd.Infrastructure
 {
@@ -41,12 +42,26 @@ namespace Hcd.Infrastructure
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = EnvGlobal.JwtIssuer,
                     ValidAudience = EnvGlobal.JwtAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EnvGlobal.JwtSecret!))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EnvGlobal.JwtAccessSecret!)),
+                    ClockSkew = TimeSpan.Zero
+                };
+                // Optional: Handle token validation failures (e.g., logging, custom response)
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception is SecurityTokenExpiredException)
+                        {
+                            // Token has expired
+                            throw new GoneException($"Need to refresh token");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
             return services;
         }
-         public static IServiceCollection AddMapping(this IServiceCollection services)
+        public static IServiceCollection AddMapping(this IServiceCollection services)
         {
             var config = TypeAdapterConfig.GlobalSettings;
             config.NewConfig<RegisterRequest, User>()

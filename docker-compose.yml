@@ -1,31 +1,32 @@
-version: '1.0'
 services:
   server:
     image: api-server-image:latest
     restart: always
-    # network_mode: host
     container_name: api-server
+    ports:
+      - 5555:5555
     depends_on:
-    - db
+      - mysql-server
   # server:
   #   build:
   #     context: .
   #     target: build-env
   #   ports:
-  #     - 5555:8080
+  #     - 5555:5555
+  #   restart: always
   #   depends_on:
-  #     - db
-  db:
+  #     - mysql-server
+  mysql-server:
     image: mysql:latest
     environment:
-      # - MYSQL_HOST=${DB_HOST}
       - MYSQL_PORT=${DB_PORT}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=0901
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
+    restart: always
     ports:
       - "3306:3306"
 volumes:

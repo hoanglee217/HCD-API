@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hcd.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class TestController : ControllerBase
     {

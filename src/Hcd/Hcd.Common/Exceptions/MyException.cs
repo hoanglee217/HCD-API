@@ -10,6 +10,9 @@ namespace Hcd.Common.Exceptions
             Exception exception, HttpStatusCode httpStatusCode, 
             string Tittle)
         {
+            // Set the HTTP status code explicitly
+            httpContext.Response.StatusCode = (int)httpStatusCode;
+
             await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
             {
                 Status = (int)httpStatusCode,
