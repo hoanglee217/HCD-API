@@ -1,83 +1,77 @@
-using Mapster;
-using MapsterMapper;
 using Hcd.Common.Exceptions;
 using Hcd.Data.Entities.Authentication;
-using Hcd.Application.Common.Interfaces.Authentication;
 using System.Security.Cryptography;
-using Hcd.Common.Interface.Authentication;
 using Hcd.Common.Requests.Authentication;
-using Hcd.Common.Interfaces;
 using Hcd.Common.Requests.Token;
 using Hcd.Common;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Identity;
+using Hcd.Data.Instances;
+using Hcd.Application.Manages.Authentication;
 
 
 namespace Hcd.Application.Services.Authentication
 {
-    public class AuthenticationService(
-        IJwtTokenGenerator jwtTokenGenerator,
-        IPasswordHandler passwordHandler,
-        IRepository<User> userRepository,
-        IMapper mapper
-    ) : IAuthenticationService
+    public class AuthenticationService(IServiceProvider serviceProvider) : ApplicationService(serviceProvider)
     {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-        private readonly IPasswordHandler _passwordHandler = passwordHandler;
-        private readonly IRepository<User> _userRepository = userRepository;
-        private readonly IMapper _mapper = mapper;
-        public async Task<RegisterResponse> Register(RegisterRequest request, CancellationToken cancellationToken)
+        private AuthenticationManager AuthenticationManager => GetService<AuthenticationManager>();
+        public async Task<RegisterResponse> Register(RegisterRequest request)
         {
             // check user exist
-            var users = await _userRepository.GetAllAsync();
-            var user = users.FirstOrDefault(o => o.Email == request.Email);
-            if (user != null)
+            var existingUser = await AuthenticationManager.FirstOrDefaultAsync(o => request.Email == o.Email);
+            if (existingUser != null)
             {
                 throw new DuplicateException("User exits!");
             };
-            // Generate a salt using RandomNumberGenerator
+           // Generate a salt using RandomNumberGenerator
             byte[] salt = new byte[16];
             RandomNumberGenerator.Fill(salt);
 
             var newUser = request.Adapt<User>();
             newUser.Salt = salt;
-            newUser.Password = _passwordHandler.HashPassword(request.Password, salt);
-            await _userRepository.AddAsync(newUser);
+            newUser.Password = PasswordHandler.HashPassword(request.Password, salt);
 
-            var response = _mapper.Map<RegisterResponse>(newUser);
+            await AuthenticationManager.AddAsync(newUser);
+            await UnitOfWork.SaveChangesAsync();
+
+            var response = Mapper.Map<RegisterResponse>(newUser);
             return response;
         }
 
-        public async Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Login(LoginRequest request)
         {
             // check user doesn't exist
-            var users = await _userRepository.GetAllAsync();
-            var user = users.FirstOrDefault(o => o.Email == request.Email) ?? throw new UnauthorizedException("Email or Password Invalid");
+            var jwtAccessExpiration = EnvGlobal.JwtAccessExpiration;
+            var existingUser = await AuthenticationManager.FirstOrDefaultAsync(o => request.Email == o.Email) ?? throw new DuplicateException("User not Found!");
+            ;
+
             // authorize
-            var passwordRequest = _passwordHandler.HashPassword(request.Password, user.Salt!);
-            if (user.Password != passwordRequest)
+            var passwordRequest = PasswordHandler.HashPassword(request.Password, existingUser.Salt!);
+            if (existingUser.Password != passwordRequest)
             {
                 throw new UnauthorizedException("Email or Password Invalid");
             }
 
             var tokenPayload = new GeneratorTokenPayload
             {
-                UserId = user.Id,
-                Email = user.Email
+                UserId = existingUser.Id,
+                Email = existingUser.Email
             };
-            var accessToken = _jwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtAccessSecret, EnvGlobal.JwtAccessExpiration);
-            var refreshToken = _jwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtRefreshSecret, EnvGlobal.JwtRefreshExpiration);
+            if (request.RememberMe == true)
+            {
+                jwtAccessExpiration = EnvGlobal.JwtRefreshExpiration;
+            }
+            var accessToken = JwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtAccessSecret, jwtAccessExpiration);
+            var refreshToken = JwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtRefreshSecret, EnvGlobal.JwtRefreshExpiration);
 
-            // var response = new LoginResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
-            var response = _mapper.Map<LoginResponse>(user);
+            var response = Mapper.Map<LoginResponse>(existingUser);
             response.AccessToken = accessToken;
             response.RefreshToken = refreshToken;
 
             return response;
         }
 
-        public Task<RefreshTokenResponse> RefreshToken(RefreshTokenRequest request, CancellationToken cancellationToken)
+        public Task<RefreshTokenResponse> RefreshToken(RefreshTokenRequest request)
         {
             var handler = new JwtSecurityTokenHandler();
             var RefreshTokenDecoder = handler.ReadJwtToken(request.RefreshToken);
@@ -88,12 +82,12 @@ namespace Hcd.Application.Services.Authentication
                 Email = RefreshTokenDecoder.Claims.First(claim => claim.Type == "email").Value,
             };
 
-            var verifyToken = _jwtTokenGenerator.VerifyRefreshToken(request.RefreshToken);
+            var verifyToken = JwtTokenGenerator.VerifyRefreshToken(request.RefreshToken);
 
-            var newAccessToken = _jwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtAccessSecret, EnvGlobal.JwtAccessExpiration);
+            var newAccessToken = JwtTokenGenerator.GeneratorToken(tokenPayload, EnvGlobal.JwtAccessSecret, EnvGlobal.JwtAccessExpiration);
 
-            var accessToken = new {AccessToken = newAccessToken};
-            var response = _mapper.Map<RefreshTokenResponse>(accessToken);
+            var accessToken = new { AccessToken = newAccessToken };
+            var response = Mapper.Map<RefreshTokenResponse>(accessToken);
             return Task.FromResult(response);
         }
     }

@@ -1,13 +1,13 @@
-using Hcd.Common.Interfaces.Management;
+using Hcd.Application.Services.Management;
 using Hcd.Common.Requests.Tag;
 using MediatR;
 
 namespace Hcd.Api.RequestHandler.Tag;
 
-public class GetAllTagsRequestHandler(ITagService tagService) : IRequestHandler<GetAllTagsRequest, List<GetAllTagsResponse>>
+public class GetAllTagsRequestHandler(TagService tagService) : IRequestHandler<GetAllTagsRequest, GetAllTagsResponse>
 {
-    public async Task<List<GetAllTagsResponse>> Handle(GetAllTagsRequest request, CancellationToken cancellationToken)
+    public Task<GetAllTagsResponse> Handle(GetAllTagsRequest request, CancellationToken cancellationToken)
     {
-        return await tagService.GetAllTags(request, cancellationToken);
+        return tagService.GetAllTags(request);
     }
 }

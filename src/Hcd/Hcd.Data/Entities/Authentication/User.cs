@@ -12,9 +12,6 @@ namespace Hcd.Data.Entities.Authentication
         public required string Email { get; set; }
         public string? PhoneNumber { get; set; }
         public required string Password { get; set; }
-        public string? Country { get; set; }
-        public string? Cty { get; set; } 
-        public string? State { get; set; }
         public byte[]? Salt { get; set; }
         public UserRoleEnums Role { get; set; } = UserRoleEnums.Guest;
         public virtual ICollection<Blog>? Blogs{ get; set; }

@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
-using Hcd.Application.Common.Interfaces.Authentication;
+using Hcd.Application.Common.Interfaces;
+using Hcd.Common.Interfaces.Authentication;
 
 namespace Hcd.Infrastructure.Authentication
 {

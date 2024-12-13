@@ -10,7 +10,7 @@ namespace Hcd.Common.Exceptions
         private readonly ILogger<GlobalExceptionHandler> _logger = logger;
 
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext,
-            Exception exception, CancellationToken cancellationToken)
+            Exception exception, CancellationToken cancellationToken = default)
         {
             // Handle TimeoutException with 408 Request Timeout
             if (exception is TimeoutException)

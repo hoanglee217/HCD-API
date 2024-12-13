@@ -1,11 +1,15 @@
+using Hcd.Common.Models;
 using MediatR;
 
 namespace Hcd.Common.Requests.Comment;
 
-public class GetAllCommentsRequest : IRequest<List<GetAllCommentsResponse>>
+public class GetAllCommentsRequest : PaginationRequest, IRequest<GetAllCommentsResponse>
 {
 };
-public class GetAllCommentsResponse
+public class GetAllCommentsResponse : PaginationResponse<GetAllCommentsResponseItem>
+{
+};
+public class GetAllCommentsResponseItem
 {
     public Guid Id { get; set; }
     public required string Content { get; set; }

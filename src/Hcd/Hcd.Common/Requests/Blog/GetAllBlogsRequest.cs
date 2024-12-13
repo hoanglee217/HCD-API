@@ -1,11 +1,15 @@
+using Hcd.Common.Models;
 using MediatR;
 
 namespace Hcd.Common.Requests.Blog;
 
-public class GetAllBlogsRequest : IRequest<List<GetAllBlogsResponse>>
+public class GetAllBlogsRequest : PaginationRequest, IRequest<GetAllBlogsResponse>
 {
 };
-public class GetAllBlogsResponse
+public class GetAllBlogsResponse : PaginationResponse<GetAllBlogsResponseItem>
+{
+};
+public class GetAllBlogsResponseItem
 {
     public Guid Id { get; set; }
     public required string Title { get; set; }

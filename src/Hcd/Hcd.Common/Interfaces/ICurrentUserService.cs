@@ -1,4 +1,4 @@
-namespace Hcd.Application.Common.Interfaces
+namespace Hcd.Common.Interfaces
 {
     public interface ICurrentUserService
 {

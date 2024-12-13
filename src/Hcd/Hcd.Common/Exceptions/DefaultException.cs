@@ -11,7 +11,7 @@ namespace Hcd.Common.Exceptions
         private readonly ILogger<DefaultException> _logger = logger;
 
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext,
-            Exception exception, CancellationToken cancellationToken)
+            Exception exception, CancellationToken cancellationToken = default)
         {
             _logger.LogError(exception, "An unexpected error occurred");
 

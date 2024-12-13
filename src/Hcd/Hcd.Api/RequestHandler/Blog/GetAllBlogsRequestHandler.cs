@@ -1,13 +1,13 @@
-using Hcd.Common.Interfaces.Management;
+using Hcd.Application.Services.Management;
 using Hcd.Common.Requests.Blog;
 using MediatR;
 
 namespace Hcd.Api.RequestHandler.Blog;
 
-public class GetAllBlogsRequestHandler(IBlogService blogService) : IRequestHandler<GetAllBlogsRequest, List<GetAllBlogsResponse>>
+public class GetAllBlogsRequestHandler(BlogService blogService) : IRequestHandler<GetAllBlogsRequest, GetAllBlogsResponse>
 {
-    public async Task<List<GetAllBlogsResponse>> Handle(GetAllBlogsRequest request, CancellationToken cancellationToken)
+    public Task<GetAllBlogsResponse> Handle(GetAllBlogsRequest request, CancellationToken cancellationToken)
     {
-        return await blogService.GetAllBlogs(request, cancellationToken);
+        return blogService.GetAllBlogs(request);
     }
 }

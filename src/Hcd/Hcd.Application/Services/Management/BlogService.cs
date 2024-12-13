@@ -1,57 +1,64 @@
-using Hcd.Application.Common.Interfaces;
+using Hcd.Application.Manages.Management;
+using Hcd.Common.Exceptions;
 using Hcd.Common.Interfaces;
-using Hcd.Common.Interfaces.Management;
+using Hcd.Common.Models;
 using Hcd.Common.Requests.Blog;
 using Hcd.Data.Entities.Management.Blog;
-using Mapster;
-using MapsterMapper;
-
+using Hcd.Data.Instances;
 namespace Hcd.Application.Services.Management
 {
-    public class BlogService(
-        IRepository<Blog> blogRepository,
-        IMapper mapper,
-        ICurrentUserService? currentUserService
-    ) : IBlogService        
+    public class BlogService(IServiceProvider serviceProvider) : ApplicationService(serviceProvider)
     {
-        private readonly IRepository<Blog> _blogRepository = blogRepository;
-        private readonly IMapper _mapper = mapper;
+        private BlogManager BlogManager => GetService<BlogManager>();
 
-        public async Task<List<GetAllBlogsResponse>> GetAllBlogs(GetAllBlogsRequest request, CancellationToken cancellationToken)
+        public async Task<GetAllBlogsResponse> GetAllBlogs(GetAllBlogsRequest request)
         {
-            var blog = await _blogRepository.GetAllAsync();
-            var response = _mapper.Map<List<GetAllBlogsResponse>>(blog);
-            return response;
+            var blogs = BlogManager.GetAll(request.Search, request.Filter);
+
+            var paginationResponse = await PaginationResponse<Blog>.Create(
+            blogs,
+            request
+        );
+
+            return Mapper.Map<GetAllBlogsResponse>(paginationResponse);
         }
 
-        public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request, CancellationToken cancellationToken)
+        public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request)
         {
-            var blog = await _blogRepository.GetByIdAsync(request.Id);
-            var response = _mapper.Map<GetDetailBlogsResponse>(blog);
-            return response;
+            var blog = await BlogManager.FindAsync(request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
+
+            return Mapper.Map<GetDetailBlogsResponse>(blog);
         }
-        
-        public async Task<CreateBlogResponse> CreateBlog(CreateBlogRequest request, CancellationToken cancellationToken)
+
+        public async Task<CreateBlogResponse> CreateBlog(CreateBlogRequest request)
         {
             var newBlog = request.Adapt<Blog>();
-            newBlog.UserId = currentUserService!.GetCurrentUserId();
-            await _blogRepository.AddAsync(newBlog);
-            var response = _mapper.Map<CreateBlogResponse>(newBlog);
+            newBlog.UserId = CurrentUser.GetCurrentUserId();
+
+            await BlogManager.AddAsync(newBlog);
+
+            await UnitOfWork.SaveChangesAsync();
+
+            var response = Mapper.Map<CreateBlogResponse>(newBlog);
             return response;
         }
 
-        public async Task DeleteBlog(DeleteBlogRequest request, CancellationToken cancellationToken)
+        public async Task DeleteBlog(DeleteBlogRequest request)
         {
-            await _blogRepository.DeleteAsync(request.Id);
+            BlogManager.Delete(request.Id);
+            await UnitOfWork.SaveChangesAsync();
+
         }
 
-        public async Task<UpdateBlogResponse> UpdateBlog(UpdateBlogRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateBlogResponse> UpdateBlog(UpdateBlogRequest request)
         {
-            var blog = request.Adapt<Blog>();
-            blog.UserId = currentUserService!.GetCurrentUserId();
-            await _blogRepository.UpdateAsync(blog);
-            var response = _mapper.Map<UpdateBlogResponse>(blog);
-            return response;
+            var blog = await BlogManager.FindAsync(request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
+            var updatedBlog = request.Adapt(blog);
+
+            await BlogManager.Update(blog);
+            await UnitOfWork.SaveChangesAsync();
+
+            return Mapper.Map<UpdateBlogResponse>(updatedBlog);
         }
     }
 }

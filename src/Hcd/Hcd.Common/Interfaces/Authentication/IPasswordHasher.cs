@@ -1,4 +1,4 @@
-namespace Hcd.Application.Common.Interfaces.Authentication
+namespace Hcd.Common.Interfaces.Authentication
 {
     public interface IPasswordHandler
     {

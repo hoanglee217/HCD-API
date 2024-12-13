@@ -1,21 +1,19 @@
-using System.Reflection;
-using Hcd.Application;
-using Hcd.Infrastructure;
-using Hcd.Common.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using Hcd.Application.Common.Interfaces;
-using Hcd.Application.Common.Services;
 using Hcd.Data;
 using Hcd.Common;
+using Hcd.Application;
+using System.Reflection;
+using Hcd.Infrastructure;
 using Hcd.Common.Interfaces;
-using Hcd.Application.Services;
+using Hcd.Common.Exceptions;
+using Hcd.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     EnvLoader.LoadEnv();
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-    builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    // builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     //mapper
     builder.Services.AddMapping();
     //mediator
@@ -23,7 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
     //error handler
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     //dependence
+    builder.Services.AddApplicationServices();
     builder.Services.AddApplication();
+
     builder.Services.AddInfrastructure(builder.Configuration);
     // Add services to the container.
     builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -1,13 +1,13 @@
-using Hcd.Common.Interfaces.Management;
+using Hcd.Application.Services.Management;
 using Hcd.Common.Requests.Category;
 using MediatR;
 
 namespace Hcd.Api.RequestHandler.Category;
 
-public class GetAllCategoriesRequestHandler(ICategoryService categoryService) : IRequestHandler<GetAllCategoriesRequest, List<GetAllCategoriesResponse>>
+public class GetAllCategoriesRequestHandler(CategoryService categoryService) : IRequestHandler<GetAllCategoriesRequest, GetAllCategoriesResponse>
 {
-    public async Task<List<GetAllCategoriesResponse>> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
+    public Task<GetAllCategoriesResponse> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
     {
-        return await categoryService.GetAllCategories(request, cancellationToken);
+        return categoryService.GetAllCategories(request);
     }
 }

@@ -2,13 +2,13 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using Hcd.Application.Common.Interfaces.Authentication;
 using Hcd.Application.Common.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Hcd.Common;
 using Hcd.Common.Requests.Token;
 using MapsterMapper;
 using Hcd.Common.Exceptions;
+using Hcd.Common.Interfaces.Authentication;
 
 namespace Hcd.Infrastructure.Authentication
 {

@@ -1,15 +1,14 @@
 using Hcd.Common.Requests.Authentication;
-using Hcd.Common.Interface.Authentication;
 using MediatR;
+using Hcd.Application.Services.Authentication;
 
 namespace Hcd.Api.RequestHandler.Authentication
 {
-    public class LoginRequestHandler(IAuthenticationService authentication) : IRequestHandler<LoginRequest, LoginResponse>
+    public class LoginRequestHandler(AuthenticationService authenticationService) : IRequestHandler<LoginRequest, LoginResponse>
     {
-        private readonly IAuthenticationService _authentication = authentication;
-        public async Task<LoginResponse> Handle(LoginRequest request, CancellationToken cancellationToken)
+        public Task<LoginResponse> Handle(LoginRequest request, CancellationToken cancellationToken)
         {
-            return await _authentication.Login(request, cancellationToken);
+            return authenticationService.Login(request);
         }
     }
 }

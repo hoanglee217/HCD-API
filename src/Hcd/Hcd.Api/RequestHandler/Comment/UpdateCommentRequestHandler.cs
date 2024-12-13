@@ -1,13 +1,13 @@
-using Hcd.Common.Interfaces.Management;
+using Hcd.Application.Services.Management;
 using Hcd.Common.Requests.Comment;
 using MediatR;
 
 namespace Hcd.Api.RequestHandler.Comment;
 
-public class UpdateCommentRequestHandler(ICommentService commentService) : IRequestHandler<UpdateCommentRequest, UpdateCommentResponse>
+public class UpdateCommentRequestHandler(CommentService commentService) : IRequestHandler<UpdateCommentRequest, UpdateCommentResponse>
 {
-    public async Task<UpdateCommentResponse> Handle(UpdateCommentRequest request, CancellationToken cancellationToken)
+    public Task<UpdateCommentResponse> Handle(UpdateCommentRequest request, CancellationToken cancellationToken)
     {
-        return await commentService.UpdateComment(request, cancellationToken);
+        return commentService.UpdateComment(request);
     }
 }

@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using Hcd.Application.Common.Interfaces;
 using Hcd.Common.Exceptions;
+using Hcd.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Hcd.Application.Common.Services
+namespace Hcd.Infrastructure.Services
 {
     public class CurrentUserService : ICurrentUserService
     {

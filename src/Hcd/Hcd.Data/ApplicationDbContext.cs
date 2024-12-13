@@ -1,8 +1,8 @@
 using Hcd.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Hcd.Data.Entities.Authentication;
-using Hcd.Application.Common.Interfaces;
 using Hcd.Data.Entities.Management.Blog;
+using Hcd.Common.Interfaces;
 
 namespace Hcd.Data
 {
@@ -19,6 +19,9 @@ namespace Hcd.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasIndex(u => new {u.Email })
+                .IsUnique();
             base.OnModelCreating(modelBuilder);
         }
 
