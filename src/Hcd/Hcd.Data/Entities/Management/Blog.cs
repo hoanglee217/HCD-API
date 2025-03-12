@@ -1,7 +1,7 @@
 using Hcd.Data.Entities.Authentication;
 using Hcd.Data.Models;
 
-namespace Hcd.Data.Entities.Management.Blog
+namespace Hcd.Data.Entities.Management
 {
     public class Blog : BaseEntity
     {
@@ -11,8 +11,8 @@ namespace Hcd.Data.Entities.Management.Blog
         public int? Rating { get; set; }
         public string? Slug { get; set; }
         public required Guid UserId { get; set; }
-        public required Guid CategoryId { get; set; }
-        public virtual required User User{ get; set; }
-        public virtual required Category Category{ get; set; }
+        public virtual required User User { get; set; }
+        public virtual List<BlogCategory> BlogCategories { get; set; } = new();
+
     }
 }

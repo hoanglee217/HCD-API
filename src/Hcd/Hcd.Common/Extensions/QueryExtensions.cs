@@ -87,26 +87,34 @@ string property)
     }
 
     public static IQueryable<TEntity> QuerySearchable<TEntity, TAttribute>(this IQueryable<TEntity> query, string searchTerm)
+{
+    if (string.IsNullOrWhiteSpace(searchTerm)) return query; // Skip if empty
+
+    var entityType = typeof(TEntity);
+    var parameter = Expression.Parameter(entityType, "x");
+
+    var searchableProperties = entityType.GetProperties()
+        .Where(p => p.GetCustomAttributes(typeof(TAttribute), true).Any() && p.PropertyType == typeof(string))
+        .ToList();
+
+    if (!searchableProperties.Any())
     {
-        var searchableProperties = typeof(TEntity).GetProperties()
-            .Where(p => p.GetCustomAttributes(typeof(TAttribute), true).Any())
-            .Select(p => p.Name).ToList();
-
-        if (!searchableProperties.Any())
-        {
-            return query;
-        }
-
-        var searchExpression = Expression.Constant(searchTerm);
-        var parameterExpression = Expression.Parameter(typeof(TEntity), "x");
-        var propertyExpressions = searchableProperties.Select(p => Expression.Property(parameterExpression, p));
-        var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) }) ?? throw new ArgumentNullException(nameof(searchTerm));
-        var containsExpressions = propertyExpressions.Select(p =>
-            Expression.Call(p, containsMethod, searchExpression) as Expression
-        );
-
-        var orExpression = containsExpressions.Aggregate(Expression.OrElse);
-        var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(orExpression, parameterExpression);
-        return query.Where(lambdaExpression);
+        return query;
     }
+
+    Expression? predicate = null;
+    var searchExpression = Expression.Constant(searchTerm, typeof(string));
+    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) }) ?? throw new InvalidOperationException("String.Contains method not found");
+
+    foreach (var property in searchableProperties)
+    {
+        var propertyAccess = Expression.Property(parameter, property);
+        var containsCall = Expression.Call(propertyAccess, containsMethod, searchExpression);
+
+        predicate = predicate == null ? containsCall : Expression.OrElse(predicate, containsCall);
+    }
+
+    var lambda = Expression.Lambda<Func<TEntity, bool>>(predicate!, parameter);
+    return query.Where(lambda);
+}
 }

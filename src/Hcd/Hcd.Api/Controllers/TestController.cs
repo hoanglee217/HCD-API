@@ -9,16 +9,22 @@ using Hcd.Data;
 using Hcd.Common;
 using Microsoft.AspNetCore.Identity;
 using Hcd.Common.Models;
+using Hcd.Infrastructure.Authentication;
+using System.Net;
+using Hcd.Common.Interfaces.Abstractions;
 
 namespace Hcd.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class TestController(
-       ApplicationDbContext dbContext
+       ApplicationDbContext dbContext,
+       IManagementRepository<User> userRepository
     ) : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
+        private readonly IManagementRepository<User> _userRepository = userRepository;
+
         [HttpGet]
         public async Task<ActionResult<PaginationResponse<RegisterResponse>>> GetBlogs(int pageNumber, int pageSize, string? search)
         {
@@ -67,33 +73,34 @@ namespace Hcd.Api.Controllers
             return Ok(result);
         }
 
-        // [Authorize]
-        // [HttpPost]
-        // public async Task<ActionResult<List<RegisterResponse>>> SetLargeUser(List<RegisterRequest> requests)
-        // {
-        //     var users = new List<User>();
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<List<RegisterResponse>>> SetLargeUser(List<RegisterRequest> requests)
+        {
+            var users = new List<User>();
 
-        //     foreach (var request in requests)
-        //     {
-        //         // Generate a unique salt for each user
-        //         byte[] salt = new byte[16];
-        //         RandomNumberGenerator.Fill(salt);
+            foreach (var request in requests)
+            {
+                // Generate a unique salt for each user
+                byte[] salt = new byte[16];
+                RandomNumberGenerator.Fill(salt);
 
-        //         // Map RegisterRequest to User
-        //         var newUser = request.Adapt<User>();
-        //         newUser.Salt = salt;
-        //         newUser.Password = _passwordHandler.HashPassword(request.Password, salt);
+                // Map RegisterRequest to User
+                var newUser = request.Adapt<User>();
+                newUser.Salt = salt;
+                var passwordHandler = new PasswordHandler();
+                newUser.Password = passwordHandler.HashPassword(request.Password, salt);
 
-        //         users.Add(newUser);
-        //     }
+                users.Add(newUser);
+            }
 
-        //     // Add the list of users to the repository
-        //     await _userRepository.AddRangeAsync(users);
+            // Add the list of users to the repository
+            await _dbContext.Users.AddRangeAsync(users);
+            await _dbContext.SaveChangesAsync();
+            // Create response
+            var responses = users.Adapt<List<RegisterResponse>>();
 
-        //     // Create response
-        //     var responses = users.Adapt<List<RegisterResponse>>();
-
-        //     return Ok(responses);
-        // }
+            return Ok(responses);
+        }
     }
 }

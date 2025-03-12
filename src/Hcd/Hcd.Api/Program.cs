@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     EnvLoader.LoadEnv();
     builder.Services.AddHttpContextAccessor();
-    builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+    builder.Services.AddTransient<ICurrentUserService, CurrentUserService>();
     // builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     //mapper
     builder.Services.AddMapping();

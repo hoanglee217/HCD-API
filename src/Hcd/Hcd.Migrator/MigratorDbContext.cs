@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Hcd.Application.Common.Interfaces;
 using Hcd.Data.Entities.Authentication;
 using Hcd.Data.Models;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Common.Interfaces;
 
 namespace Hcd.Migrator

@@ -3,7 +3,7 @@ using Hcd.Common.Exceptions;
 using Hcd.Common.Interfaces;
 using Hcd.Common.Models;
 using Hcd.Common.Requests.Blog;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
 namespace Hcd.Application.Services.Management
 {

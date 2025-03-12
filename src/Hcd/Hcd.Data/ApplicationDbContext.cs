@@ -1,8 +1,9 @@
 using Hcd.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Hcd.Data.Entities.Authentication;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Common.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Hcd.Data
 {
@@ -20,11 +21,27 @@ namespace Hcd.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasIndex(u => new {u.Email })
+                .HasIndex(u => new { u.Email })
                 .IsUnique();
             base.OnModelCreating(modelBuilder);
+            // Apply Global Query Filter
+            foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var method = typeof(ApplicationDbContext)
+                        .GetMethod(nameof(SetQueryFilter), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?
+                        .MakeGenericMethod(entityType.ClrType);
+
+                    method?.Invoke(null, new object[] { modelBuilder });
+                }
+            }
         }
 
+        private static void SetQueryFilter<T>(ModelBuilder modelBuilder) where T : BaseEntity
+        {
+            modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+        }
         // public override int SaveChanges()
         // {
         //     var entries = ChangeTracker

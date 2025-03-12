@@ -2,7 +2,7 @@ using Hcd.Application.Manages.Management;
 using Hcd.Common.Exceptions;
 using Hcd.Common.Models;
 using Hcd.Common.Requests.Comment;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
 
 namespace Hcd.Application.Services.Management

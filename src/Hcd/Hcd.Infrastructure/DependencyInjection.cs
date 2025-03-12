@@ -30,7 +30,7 @@ namespace Hcd.Infrastructure
             services.AddTransient<IApplicationService, AuthenticationService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); // Replace with your actual UnitOfWork implementation
-            services.AddScoped<ICurrentUserService, CurrentUserService>(); // Replace with your actual service
+            services.AddTransient<ICurrentUserService, CurrentUserService>(); // Replace with your actual service
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>(); // Replace with your actual JWT token generator
             services.AddScoped<IPasswordHandler, PasswordHandler>(); // Replace with your actual password handler
 

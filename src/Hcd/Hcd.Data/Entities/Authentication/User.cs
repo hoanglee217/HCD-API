@@ -1,6 +1,6 @@
 
 using Hcd.Common.Enums;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Data.Models;
 
 namespace Hcd.Data.Entities.Authentication

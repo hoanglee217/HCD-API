@@ -17,4 +17,5 @@ public class GetAllCategoriesResponseItem
     public int Position { get; set; }
     public  Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
+    public List<GetAllCategoriesResponseItem>? Children { get; set; }
 };

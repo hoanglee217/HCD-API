@@ -13,5 +13,8 @@
         "Mediat",
         "mediatr",
         "settingsdocker"
-    ]
+    ],
+    "cSpell.enabledFileTypes": {
+        "csharp": false
+    }
 }

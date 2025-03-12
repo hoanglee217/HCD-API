@@ -4,8 +4,9 @@ using MediatR;
 using Hcd.Common.Interfaces.Abstractions;
 using Hcd.Common.Interfaces;
 using Hcd.Application.Common.Interfaces.Services;
+using Hcd.Data.Models;
 
-namespace Hcd.Common.Base;
+namespace Hcd.Data;
 
 public abstract class UnitOfWorkBase<TContext>(
     TContext context,
@@ -42,6 +43,35 @@ public abstract class UnitOfWorkBase<TContext>(
         var changeEntities = context.ChangeTracker
             .Entries().Where(e => states.Contains(e.State))
             .ToList();
+
+        foreach (var entry in changeEntities)
+        {
+            var entity = (BaseEntity)entry.Entity;
+            var now = DateTime.UtcNow;
+            var userId = CurrentUserService?.GetCurrentUserId();
+
+            entity.CreatedDate = now;
+
+            if (entry.State == EntityState.Added)
+            {
+                entity.CreatedDate = now;
+                entity.CreatedBy = userId;
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                entity.UpdatedDate = now;
+                entity.UpdatedBy = userId;
+            }
+
+            if (entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified; // Soft delete
+                entity.IsDeleted = true;
+                entity.DeletedDate = now;
+                entity.DeletedBy = userId;
+            }
+        }
 
         await context.SaveChangesAsync();
 
@@ -93,6 +123,6 @@ public abstract class UnitOfWorkBase<TContext>(
         // {
         //     Console.WriteLine(e);
         // }
-        
+
     }
 }

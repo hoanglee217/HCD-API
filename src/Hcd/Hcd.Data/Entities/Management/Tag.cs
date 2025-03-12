@@ -1,6 +1,6 @@
 using Hcd.Data.Models;
 
-namespace Hcd.Data.Entities.Management.Blog
+namespace Hcd.Data.Entities.Management
 {
     public class Tag : BaseEntity
     {

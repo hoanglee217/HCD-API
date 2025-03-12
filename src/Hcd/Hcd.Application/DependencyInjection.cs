@@ -6,7 +6,7 @@ using Hcd.Application.Services.Management;
 using Hcd.Common.Interfaces;
 using Hcd.Common.Interfaces.Abstractions;
 using Hcd.Data.Entities.Authentication;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +23,7 @@ namespace Hcd.Application
             services.AddScoped<CategoryService>();
             services.AddScoped<CommentService>();
             services.AddScoped<TagService>();
+            // services.AddScoped<BlogCategoryService>(); 
 
 
             services.AddScoped<AuthenticationManager>();

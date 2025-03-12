@@ -1,6 +1,6 @@
 using Hcd.Common.Exceptions;
 using Hcd.Common.Requests.Category;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -12,6 +12,7 @@ public class GetDetailCategoryResponse
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public int Position { get; set; }
-    public  Guid? ParentId { get; set; }
+    public Guid? ParentId { get; set; }
     public CategoryEnums CategoryEnums { get; set; }
+    public List<GetDetailCategoryResponse>? Children { get; set; }
 };

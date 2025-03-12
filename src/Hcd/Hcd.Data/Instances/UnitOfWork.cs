@@ -1,5 +1,4 @@
-﻿using Hcd.Common.Base;
-using MediatR;
+﻿using MediatR;
 
 namespace Hcd.Data.Instances;
 

@@ -4,6 +4,7 @@ using Hcd.Migrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hcd.Migrator.Migrations
 {
     [DbContext(typeof(MigratorDbContext))]
-    partial class MigratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250303102757_remove_useless_in_users_table")]
+    partial class remove_useless_in_users_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,10 +80,13 @@ namespace Hcd.Migrator.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Blog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Content")
@@ -125,54 +131,14 @@ namespace Hcd.Migrator.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.BlogCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("BlogId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlogId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("BlogCategory");
-                });
-
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Category", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +183,7 @@ namespace Hcd.Migrator.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Comment", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +229,7 @@ namespace Hcd.Migrator.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Tag", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Tag", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -338,39 +304,28 @@ namespace Hcd.Migrator.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Blog", b =>
                 {
+                    b.HasOne("Hcd.Data.Entities.Management.Blog.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hcd.Data.Entities.Authentication.User", "User")
                         .WithMany("Blogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Category");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.BlogCategory", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Comment", b =>
                 {
-                    b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
-                        .WithMany("BlogCategories")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hcd.Data.Entities.Management.Category", "Category")
-                        .WithMany("BlogCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Comment", b =>
-                {
-                    b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
+                    b.HasOne("Hcd.Data.Entities.Management.Blog.Blog", "Blog")
                         .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -387,9 +342,9 @@ namespace Hcd.Migrator.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Tag", b =>
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog.Tag", b =>
                 {
-                    b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
+                    b.HasOne("Hcd.Data.Entities.Management.Blog.Blog", "Blog")
                         .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -401,16 +356,6 @@ namespace Hcd.Migrator.Migrations
             modelBuilder.Entity("Hcd.Data.Entities.Authentication.User", b =>
                 {
                     b.Navigation("Blogs");
-                });
-
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Blog", b =>
-                {
-                    b.Navigation("BlogCategories");
-                });
-
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Category", b =>
-                {
-                    b.Navigation("BlogCategories");
                 });
 #pragma warning restore 612, 618
         }

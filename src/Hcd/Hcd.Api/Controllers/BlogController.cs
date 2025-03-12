@@ -1,5 +1,5 @@
 using Hcd.Common.Requests.Blog;
-using Hcd.Data.Entities.Management.Blog;
+using Hcd.Data.Entities.Management;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -10,7 +10,7 @@ namespace Hcd.Migrator.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("CREATE INDEX IX_User_Email ON Users(Email);");
+            migrationBuilder.Sql("CREATE INDEX IX_User_Email ON Users(Email(255));");
         }
 
         /// <inheritdoc />

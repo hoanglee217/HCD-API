@@ -1,23 +1,24 @@
 services:
-  server:
-    image: api-server-image:latest
-    restart: always
-    container_name: api-server
-    ports:
-      - 5555:5555
-    depends_on:
-      - mysql-server
   # server:
-  #   build:
-  #     context: .
-  #     target: build-env
+  #   image: api-server-image:latest
+  #   restart: always
+  #   container_name: api-server
   #   ports:
   #     - 5555:5555
-  #   restart: always
   #   depends_on:
-  #     - mysql-server
+      # - mysql-server
+  server:
+    build:
+      context: .
+      target: build-env
+    ports:
+      - 5555:5555
+    restart: always
+    depends_on:
+      - mysql-server
   mysql-server:
     image: mysql:latest
+    container_name: mysql-server
     environment:
       - MYSQL_PORT=${DB_PORT}
       - MYSQL_DATABASE=${DB_NAME}
