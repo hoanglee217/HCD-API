@@ -4,6 +4,7 @@ using Hcd.Data.Entities.Authentication;
 using Hcd.Data.Entities.Management;
 using Hcd.Common.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Hcd.Data.Entities.System;
 
 namespace Hcd.Data
 {
@@ -16,7 +17,9 @@ namespace Hcd.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BlogCategory> BlogCategories { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Option> Options { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

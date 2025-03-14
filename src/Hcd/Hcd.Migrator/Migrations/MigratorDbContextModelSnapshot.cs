@@ -92,6 +92,9 @@ namespace Hcd.Migrator.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DatePublished")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("char(36)");
 
@@ -106,6 +109,9 @@ namespace Hcd.Migrator.Migrations
 
                     b.Property<string>("Slug")
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Thumbnail")
                         .HasColumnType("longtext");
@@ -169,7 +175,7 @@ namespace Hcd.Migrator.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("BlogCategory");
+                    b.ToTable("BlogCategories");
                 });
 
             modelBuilder.Entity("Hcd.Data.Entities.Management.Category", b =>
@@ -302,6 +308,45 @@ namespace Hcd.Migrator.Migrations
                     b.HasIndex("BlogId");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Hcd.Data.Entities.System.Option", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Hcd.Data.Models.AuditLog", b =>

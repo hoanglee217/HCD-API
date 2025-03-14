@@ -23,7 +23,7 @@ namespace Hcd.Application
             services.AddScoped<CategoryService>();
             services.AddScoped<CommentService>();
             services.AddScoped<TagService>();
-            // services.AddScoped<BlogCategoryService>(); 
+            services.AddScoped<BlogCategoryService>();
 
 
             services.AddScoped<AuthenticationManager>();
@@ -36,6 +36,8 @@ namespace Hcd.Application
             services.AddScoped(typeof(IManagementRepository<Comment>), typeof(ManagementRepository<Comment>));
             services.AddScoped<TagManager>();
             services.AddScoped(typeof(IManagementRepository<Tag>), typeof(ManagementRepository<Tag>));
+            services.AddScoped<BlogCategoryManager>();
+            services.AddScoped(typeof(IManagementRepository<BlogCategory>), typeof(ManagementRepository<BlogCategory>));
 
             return services;
         }

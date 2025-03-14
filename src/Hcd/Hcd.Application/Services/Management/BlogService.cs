@@ -1,10 +1,11 @@
-using Hcd.Application.Manages.Management;
-using Hcd.Common.Exceptions;
-using Hcd.Common.Interfaces;
 using Hcd.Common.Models;
-using Hcd.Common.Requests.Blog;
-using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
+using Hcd.Common.Exceptions;
+using Hcd.Common.Requests.Management.Blog;
+
+using Hcd.Data.Entities.Management;
+using Hcd.Application.Manages.Management;
+
 namespace Hcd.Application.Services.Management
 {
     public class BlogService(IServiceProvider serviceProvider) : ApplicationService(serviceProvider)
@@ -13,14 +14,16 @@ namespace Hcd.Application.Services.Management
 
         public async Task<GetAllBlogsResponse> GetAllBlogs(GetAllBlogsRequest request)
         {
-            var blogs = BlogManager.GetAll(request.Search, request.Filter);
+            var blogs = BlogManager.GetAll().Include(b => b.User).Include(b => b.BlogCategories).ThenInclude(bc => bc.Category);
 
             var paginationResponse = await PaginationResponse<Blog>.Create(
             blogs,
             request
         );
+            Console.WriteLine($"Debug: {paginationResponse.Items.FirstOrDefault()?.BlogCategories.Count} categories found");
 
-            return Mapper.Map<GetAllBlogsResponse>(paginationResponse);
+            var response = Mapper.Map<GetAllBlogsResponse>(paginationResponse);
+            return response;
         }
 
         public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request)
