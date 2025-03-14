@@ -19,6 +19,7 @@ using Hcd.Application.Services.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Hcd.Application.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Hcd.Application.Mappings;
 
 namespace Hcd.Infrastructure
 {
@@ -82,7 +83,7 @@ namespace Hcd.Infrastructure
             .Map(dest => dest.Id, src => Guid.NewGuid())
             .Map(dest => dest.Role, src => UserRoleEnums.Guest);
             config.Scan(Assembly.GetExecutingAssembly());
-
+            // MapsterConfig.RegisterMappings();
             services.AddSingleton(config);
             services.AddScoped<IMapper, Mapper>();
             return services;

@@ -1,5 +1,5 @@
 using Hcd.Common.Exceptions;
-using Hcd.Common.Requests.Tag;
+using Hcd.Common.Requests.Management.Tag;
 using Hcd.Data.Entities.Management;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

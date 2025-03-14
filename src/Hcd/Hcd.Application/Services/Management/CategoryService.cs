@@ -3,7 +3,7 @@ using Hcd.Application.Manages.Management;
 using Hcd.Common.Enums;
 using Hcd.Common.Exceptions;
 using Hcd.Common.Models;
-using Hcd.Common.Requests.Category;
+using Hcd.Common.Requests.Management.Category;
 using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
 
@@ -41,10 +41,12 @@ namespace Hcd.Application.Services.Management
             // {
             var parentCategoriesQuery = CategoryManager.GetAll()
                 .Where(x => x.CategoryEnums == CategoryEnums.Primary);
+
             if (request.Search != null)
             {
                 parentCategoriesQuery = parentCategoriesQuery.Where(o => o.Name.Contains(request.Search));
             }
+            
             var paginationResponse = await PaginationResponse<Category>.Create(
                 parentCategoriesQuery,
                 request

@@ -1,10 +1,9 @@
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 using Microsoft.EntityFrameworkCore;
-using Hcd.Application.Common.Interfaces;
 using Hcd.Data.Entities.Authentication;
 using Hcd.Data.Models;
 using Hcd.Data.Entities.Management;
 using Hcd.Common.Interfaces;
+using Hcd.Data.Entities.System;
 
 namespace Hcd.Migrator
 {
@@ -17,6 +16,9 @@ namespace Hcd.Migrator
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BlogCategory> BlogCategories { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Option> Options { get; set; }
+
     }
 }

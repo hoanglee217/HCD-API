@@ -1,7 +1,7 @@
 using Hcd.Application.Manages.Management;
 using Hcd.Common.Exceptions;
 using Hcd.Common.Models;
-using Hcd.Common.Requests.Tag;
+using Hcd.Common.Requests.Management.Tag;
 using Hcd.Data.Entities.Management;
 using Hcd.Data.Instances;
 

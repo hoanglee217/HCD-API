@@ -9,7 +9,6 @@ namespace Hcd.Data.Entities.Management
         public int Position { get; set; }
         public Guid? ParentId { get; set; }
         public CategoryEnums CategoryEnums { get; set; }
-        public virtual List<BlogCategory> BlogCategories { get; set; } = new();
-
+        public virtual ICollection<BlogCategory> BlogCategories { get; set; } = new List<BlogCategory>();
     }
 }
