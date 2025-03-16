@@ -16,6 +16,6 @@ public class GetDetailBlogsResponse
     public int Rating { get; set; }
     public required string Slug { get; set; }
     public BlogStatusEnums Status { get; set; }
-    public required Guid CategoryId { get; set; }
-    public required Guid UserId { get; set; }
+    public UserDto User { get; set; } = new UserDto();
+    public ICollection<BlogCategortDto> BlogCategories { get; set; } = new List<BlogCategortDto>();
 };

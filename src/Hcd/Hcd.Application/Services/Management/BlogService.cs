@@ -28,7 +28,7 @@ namespace Hcd.Application.Services.Management
 
         public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request)
         {
-            var blog = await BlogManager.FindAsync(request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
+            var blog = await BlogManager.GetAll().Include(b => b.User).Include(b => b.BlogCategories).ThenInclude(bc => bc.Category).FirstOrDefaultAsync(o => o.Id == request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
 
             return Mapper.Map<GetDetailBlogsResponse>(blog);
         }

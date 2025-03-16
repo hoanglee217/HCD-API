@@ -18,7 +18,8 @@ namespace Hcd.Application.Mappings
                     Category = bc.Category != null ? new CategoryDto
                     {
                         Id = bc.Category.Id,
-                        Name = bc.Category.Name
+                        Name = bc.Category.Name,
+                        CategoryEnums = bc.Category.CategoryEnums
                     } : null
                 }).ToList());
 
