@@ -1,4 +1,4 @@
-using Hcd.Application.Manages.Management;
+using Hcd.Application.Managers.Management;
 using Hcd.Common.Exceptions;
 using Hcd.Common.Models;
 using Hcd.Common.Requests.Management.Tag;

@@ -2,7 +2,7 @@ using Hcd.Common.Models;
 using Hcd.Data.Instances;
 using Hcd.Common.Exceptions;
 using Hcd.Common.Requests.System.Option;
-using Hcd.Application.Manages.System;
+using Hcd.Application.Managers.System;
 using Hcd.Data.Entities.System;
 
 namespace Hcd.Application.Services.System

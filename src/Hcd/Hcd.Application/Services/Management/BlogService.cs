@@ -4,7 +4,7 @@ using Hcd.Common.Exceptions;
 using Hcd.Common.Requests.Management.Blog;
 
 using Hcd.Data.Entities.Management;
-using Hcd.Application.Manages.Management;
+using Hcd.Application.Managers.Management;
 
 namespace Hcd.Application.Services.Management
 {

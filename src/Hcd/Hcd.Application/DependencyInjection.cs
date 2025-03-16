@@ -1,6 +1,6 @@
 using System.Reflection;
-using Hcd.Application.Manages.Authentication;
-using Hcd.Application.Manages.Management;
+using Hcd.Application.Managers.Authentication;
+using Hcd.Application.Managers.Management;
 using Hcd.Application.Services.Authentication;
 using Hcd.Application.Services.Management;
 using Hcd.Common.Interfaces;

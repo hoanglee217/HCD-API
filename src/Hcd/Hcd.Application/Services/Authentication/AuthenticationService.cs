@@ -7,7 +7,7 @@ using Hcd.Common;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Hcd.Data.Instances;
-using Hcd.Application.Manages.Authentication;
+using Hcd.Application.Managers.Authentication;
 
 
 namespace Hcd.Application.Services.Authentication

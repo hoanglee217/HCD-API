@@ -1,5 +1,5 @@
 using Hcd.Application.Exceptions;
-using Hcd.Application.Manages.Authentication;
+using Hcd.Application.Managers.Authentication;
 using Hcd.Application.Services.Authentication;
 using Hcd.Common.Requests.Authentication;
 using Hcd.Data.Entities.Authentication;
