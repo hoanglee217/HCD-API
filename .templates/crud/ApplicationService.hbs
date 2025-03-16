@@ -1,0 +1,77 @@
+{{#meta}}
+output: src/Hcd/Hcd.Application/Services/{{Module}}/{{Entity}}Service.cs
+enable: {{useApplicationService}}
+{{/meta}}
+using Hcd.Common.Models;
+using Hcd.Data.Instances;
+using Hcd.Common.Exceptions;
+using Hcd.Common.Requests.{{Module}}.{{Entities}};
+using Hcd.Application.Managers.{{Module}};
+using Hcd.Data.Entities.{{Module}};
+
+namespace Hcd.Application.Services.{{Module}};
+
+public class {{Entity}}Service(IServiceProvider serviceProvider) : ApplicationService(serviceProvider)
+{
+    private {{Entity}}Manager {{Entity}}Manager => GetService<{{Entity}}Manager>();
+    
+    public async Task<GetAll{{Entities}}Response> GetAll{{Entities}}(GetAll{{Entities}}Request request)
+    {
+        var {{entities}} = {{Entity}}Manager.GetAll();
+
+        var paginationResponse = await PaginationResponse<{{Entity}}>.Create(
+            {{entities}},
+            request
+        );
+
+        return Mapper.Map<GetAll{{Entities}}Response>(paginationResponse);
+    }
+
+    public async Task<GetDetail{{Entity}}Response> GetDetail{{Entity}}(GetDetail{{Entity}}Request request)
+    {
+        var {{entity}} = await {{Entity}}Manager.FindAsync(request.Id);
+
+        if ({{entity}} == null)
+        {
+            throw new NotFoundException($"{{entity}} with {request.Id} not found!!");
+        }
+
+        return Mapper.Map<GetDetail{{Entity}}Response>({{entity}});
+    }
+
+    public async Task<Create{{Entity}}Response> Create{{Entity}}(Create{{Entity}}Request request)
+    {
+        var {{entity}} = Mapper.Map<{{Entity}}>(request);
+
+        await {{Entity}}Manager.AddAsync({{entity}});
+
+        await UnitOfWork.SaveChangesAsync();
+
+        return Mapper.Map<Create{{Entity}}Response>({{entity}});
+    }
+
+    public async Task<Update{{Entity}}Response> Update{{Entity}}(Update{{Entity}}Request request)
+    {
+        var {{entity}} = await {{Entity}}Manager.FirstOrDefaultAsync(o => o.Id == request.Id);
+
+        if({{entity}} == null)
+        {
+            throw new NotFoundException($"{{entity}} with {request.Id} not found!!");
+        }
+
+        // TODO: Update {{entity}} properties
+
+        var updated{{Entity}} = {{Entity}}Manager.Update({{entity}});
+
+        await UnitOfWork.SaveChangesAsync();
+
+        return Mapper.Map<Update{{Entity}}Response>(updated{{Entity}});
+    }
+
+    public async Task Delete{{Entity}}(Delete{{Entity}}Request request)
+    {
+        {{Entity}}Manager.Delete(request.Id);
+
+        await UnitOfWork.SaveChangesAsync();
+    }
+}

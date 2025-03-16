@@ -1,0 +1,38 @@
+{{#meta}}
+output: src/Hcd/@Test/Hcd.Host.Test/Tests/{{Module}}/{{Entities}}/{{Entity}}CreateTests.cs
+enable: {{useIntegrationTests}}
+{{/meta}}
+using Hcd.Contract.Requests.{{Module}}.{{Entities}};
+using Hcd.Host.Test.Setup;
+using Hcd.Host.Test.Stores.{{Module}};
+using Esg.Shared.Test.Integration;
+
+namespace Hcd.Host.Test.Tests.{{Module}}.{{Entities}};
+
+public class {{Entity}}CreateTests(WebApplication<{{App}}AppFactory, Program> app) : {{App}}Test(app)
+{
+    private const string _endpoint = "/api/v1/{{param entities}}";
+
+    [Fact]
+    public async Task ShouldCreateCorrectly()
+    {
+        var request = new {{Entity}}CreateRequest()
+        {
+            // TODO: Add the request properties
+            Name = throw new System.NotImplementedException(),
+        };
+
+        var createResponse = await AuthenticatedClient.PostAsJsonAsync(_endpoint, request);
+        createResponse.EnsureSuccessStatusCode();
+        Assert.Equal(System.Net.HttpStatusCode.Created, createResponse.StatusCode);
+        
+        // Response data should not be null
+        var createResponseData = await createResponse.Content.ReadFromJsonAsync<{{Entity}}CreateResponse>();
+        Assert.NotNull(createResponseData);
+
+        // Check if created
+        var store = new {{Entity}}Store(AuthenticatedClient);
+        var {{entity}} = await store.GetOne(createResponseData.Id);
+        Assert.Equal(request.Name, {{entity}}.Name);
+    }
+}

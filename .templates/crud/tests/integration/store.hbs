@@ -1,0 +1,21 @@
+{{#meta}}
+output: src/Hcd/@Test/Hcd.Host.Test/Stores/{{Module}}/{{Entity}}Store.cs
+enable: {{useIntegrationTests}}
+{{/meta}}
+using Hcd.Contract.Requests.{{Module}}.{{Entities}};
+using Esg.Shared.Test.Abstractions;
+
+namespace Hcd.Host.Test.Stores.{{Module}};
+
+public record {{Entity}}Store(HttpClient HttpClient) : IEntityStore<Guid, {{Entity}}GetDetailResponse>
+{
+    private const string Endpoint = "/api/v1/{{param entities}}";
+
+    public async Task<{{Entity}}GetDetailResponse> GetOne(Guid id)
+    {
+        var response = await HttpClient.GetAsync($"{Endpoint}/{id}");
+        response.EnsureSuccessStatusCode();
+        var responseContent = await response.Content.ReadFromJsonAsync<{{Entity}}GetDetailResponse>();
+        return responseContent!;
+    }
+}

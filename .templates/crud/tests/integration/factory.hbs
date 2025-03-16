@@ -1,0 +1,41 @@
+{{#meta}}
+output: src/Hcd/@Test/Hcd.Host.Test/Factories/{{Module}}/{{Entity}}Factory.cs
+enable: {{useIntegrationTests}}
+{{/meta}}
+using Bogus;
+using Hcd.Contract.Requests.{{Module}}.{{Entities}};
+using Esg.Shared.Test.Abstractions;
+using Mapster;
+
+namespace Hcd.Host.Test.Factories.{{Module}};
+
+public record {{Entity}}Factory(HttpClient HttpClient) : IEntityFactory<{{Entity}}CreateRequest, {{Entity}}CreateResponse>
+{
+    private const string Endpoint = "/api/v1/{{param entities}}";
+
+    public async Task<{{Entity}}CreateResponse> Create({{Entity}}CreateRequest? baseValue = null)
+    {
+        var customerRequestFaker = new Faker<{{Entity}}CreateRequest>()
+            .RuleFor(x => x.Name, f => f.Person.FirstName);
+
+        var customerRequest = customerRequestFaker.Generate();
+
+        if (baseValue != null)
+        {
+            customerRequest = baseValue.Adapt(customerRequest);
+        }
+
+        var createResponse = await HttpClient.PostAsJsonAsync(Endpoint, customerRequest);
+        createResponse.EnsureSuccessStatusCode();
+        var createResponseContent = await createResponse.Content.ReadFromJsonAsync<{{Entity}}CreateResponse>();
+        return createResponseContent!;
+    }
+
+    public async Task CreateMany(int quantity, {{Entity}}CreateRequest? baseValue = null)
+    {
+        for (var i = 0; i < quantity; i++)
+        {
+            await Create(baseValue);
+        }
+    }
+}

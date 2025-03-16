@@ -1,0 +1,12 @@
+{{#meta}}
+output: src/Hcd/Hcd.Data/Entities/{{Module}}/{{Entity}}.cs
+enable: {{useEntity}}
+{{/meta}}
+using Hcd.Data.Models;
+
+namespace Hcd.Data.Entities.{{Module}};
+
+public class {{Entity}} : BaseEntity
+{
+    public required string Name { get; set; }
+}

@@ -1,0 +1,19 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Requests/{{Module}}/{{Entities}}/Update{{Entity}}Request.cs
+enable: {{useUpdateDtos}}
+{{/meta}}
+using MediatR;
+
+namespace Hcd.Common.Requests.{{Module}}.{{Entities}};
+
+public class Update{{Entity}}Request : IRequest<Update{{Entity}}Response>
+{
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+}
+
+public class Update{{Entity}}Response
+{
+    public Guid Id { get; set; }
+    public required string Name { get; set; }
+}

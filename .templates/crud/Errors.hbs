@@ -1,0 +1,11 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Errors/{{Module}}/{{Entity}}Errors.cs
+enable: {{useDomainService}}
+{{/meta}}
+namespace Hcd.Common.Errors.{{Module}};
+
+public class {{Entity}}Errors
+{
+    public const string {{ENTITY}}_NOT_FOUND = "{{ENTITY}}_NOT_FOUND";
+    public const string {{ENTITY}}_ALREADY_EXISTS = "{{ENTITY}}_ALREADY_EXISTS";
+}

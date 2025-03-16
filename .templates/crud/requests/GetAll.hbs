@@ -1,0 +1,22 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Requests/{{Module}}/{{Entities}}/GetAll{{Entities}}Request.cs
+enable: {{useGetAllDtos}}
+{{/meta}}
+using Hcd.Common.Models;
+using MediatR;
+
+namespace Hcd.Common.Requests.{{Module}}.{{Entities}};
+
+public class GetAll{{Entities}}Request : PaginationRequest, IRequest<GetAll{{Entities}}Response>
+{
+}
+
+public class GetAll{{Entities}}Response : PaginationResponse<GetAll{{Entities}}ResponseItem>
+{
+}
+
+public class GetAll{{Entities}}ResponseItem
+{
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+}

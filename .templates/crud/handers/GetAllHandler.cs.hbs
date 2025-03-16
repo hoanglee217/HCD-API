@@ -1,0 +1,17 @@
+﻿{{#meta}}
+output: src/Hcd/Hcd.Api/RequestHandler/{{Module}}/{{Entities}}/GetAll{{Entities}}Handler.cs
+enable: {{useGetAllDtos}}
+{{/meta}}
+using Hcd.Common.Requests.{{Module}}.{{Entities}};
+using Hcd.Application.Services.{{Module}};
+using MediatR;
+
+namespace Hcd.Api.RequestHandler.{{Module}}.{{Entities}};
+
+public class GetAll{{Entities}}Handler({{Entity}}Service {{entity}}Service) : IRequestHandler<GetAll{{Entities}}Request, GetAll{{Entities}}Response>
+{
+    public Task<GetAll{{Entities}}Response> Handle(GetAll{{Entities}}Request request, CancellationToken cancellationToken)
+    {
+        return {{entity}}Service.GetAll{{Entities}}(request);
+    }
+}

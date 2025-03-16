@@ -1,0 +1,37 @@
+{{#meta}}
+output: src/Hcd/@Test/Hcd.Host.Test/Tests/{{Module}}/{{Entities}}/{{Entity}}GetDetailTests.cs
+enable: {{useIntegrationTests}}
+{{/meta}}
+using Hcd.Contract.Requests.{{Module}}.{{Entities}};
+using Hcd.Host.Test.Factories.{{Module}};
+using Hcd.Host.Test.Setup;
+using Esg.Shared.Test.Integration;
+
+namespace Hcd.Host.Test.Tests.{{Module}}.{{Entities}};
+
+public class {{Entity}}GetDetailTests(WebApplication<{{App}}AppFactory, Program> app) : {{App}}Test(app)
+{
+    private const string _endpoint = "/api/v1/{{param entities}}";
+
+    [Fact]
+    public async Task ShouldGetDetailCorrectly()
+    {
+        var factory = new {{Entity}}Factory(AuthenticatedClient);
+        var new{{Entity}} = await factory.Create();
+
+        var getAllResponse = await AuthenticatedClient.GetAsync($"{_endpoint}/{new{{Entity}}.Id}");
+        getAllResponse.EnsureSuccessStatusCode();
+        Assert.Equal(System.Net.HttpStatusCode.OK, getAllResponse.StatusCode);
+
+        var {{entity}} = await getAllResponse.Content.ReadFromJsonAsync<{{Entity}}GetDetailResponse>();
+        Assert.NotNull({{entity}});
+        Assert.Equal(new{{Entity}}.Id, {{entity}}.Id);
+    }
+
+    [Fact]
+    public async Task ShouldReturnNotFound()
+    {
+        var getAllResponse = await AuthenticatedClient.GetAsync($"{_endpoint}/00000000-0000-0000-0000-000000000000");
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, getAllResponse.StatusCode);
+    }
+}

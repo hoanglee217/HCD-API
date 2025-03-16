@@ -1,0 +1,12 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Requests/{{Module}}/{{Entities}}/Delete{{Entity}}Request.cs
+enable: {{useDeleteDtos}}
+{{/meta}}
+using MediatR;
+
+namespace Hcd.Common.Requests.{{Module}}.{{Entities}};
+
+public class Delete{{Entity}}Request: IRequest
+{
+    public Guid Id { get; set; }
+}

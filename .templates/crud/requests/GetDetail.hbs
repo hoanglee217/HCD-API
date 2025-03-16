@@ -1,0 +1,18 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Requests/{{Module}}/{{Entities}}/GetDetail{{Entity}}Request.cs
+enable: {{useGetDetailDtos}}
+{{/meta}}
+using MediatR;
+
+namespace Hcd.Common.Requests.{{Module}}.{{Entities}};
+
+public class GetDetail{{Entity}}Request : IRequest<GetDetail{{Entity}}Response>
+{
+    public required Guid Id { get; set; }
+}
+
+public class GetDetail{{Entity}}Response
+{
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+}

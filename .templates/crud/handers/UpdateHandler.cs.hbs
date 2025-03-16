@@ -1,0 +1,17 @@
+﻿{{#meta}}
+output: src/Hcd/Hcd.Api/RequestHandler/{{Module}}/{{Entities}}/Update{{Entity}}Handler.cs
+enable: {{useUpdateDtos}}
+{{/meta}}
+using Hcd.Common.Requests.{{Module}}.{{Entities}};
+using Hcd.Application.Services.{{Module}};
+using MediatR;
+
+namespace Hcd.Api.RequestHandler.{{Module}}.{{Entities}};
+
+public class Update{{Entity}}Handler({{Entity}}Service {{entity}}Service) : IRequestHandler<Update{{Entity}}Request, Update{{Entity}}Response>
+{
+    public Task<Update{{Entity}}Response> Handle(Update{{Entity}}Request request, CancellationToken cancellationToken)
+    {
+        return {{entity}}Service.Update{{Entity}}(request);
+    }
+}

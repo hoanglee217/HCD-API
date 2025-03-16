@@ -1,0 +1,17 @@
+{{#meta}}
+output: src/Hcd/Hcd.Common/Requests/{{Module}}/{{Entities}}/Create{{Entity}}Request.cs
+enable: {{useCreateDtos}}
+{{/meta}}
+using MediatR;
+
+namespace Hcd.Common.Requests.{{Module}}.{{Entities}};
+
+public class Create{{Entity}}Request : IRequest<Create{{Entity}}Response>
+{
+    public required string Name { get; set; }
+}
+
+public class Create{{Entity}}Response
+{
+    public required string Name { get; set; }
+}

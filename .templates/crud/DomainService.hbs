@@ -1,0 +1,11 @@
+{{#meta}}
+output: src/Hcd/Hcd.Application/Managers/{{Module}}/{{Entity}}Manager.cs
+enable: {{useDomainService}}
+{{/meta}}
+using Hcd.Common.Interfaces.Abstractions;
+using Hcd.Data.Entities.{{Module}};
+
+namespace Hcd.Application.Managers.{{Module}};
+
+public class {{Entity}}Manager(I{{App}}Repository<{{Entity}}> {{entity}}Repository) 
+    : {{App}}DomainService<{{Entity}}>({{entity}}Repository);

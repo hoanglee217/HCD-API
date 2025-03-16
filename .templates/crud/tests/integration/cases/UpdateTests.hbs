@@ -1,0 +1,38 @@
+{{#meta}}
+output: src/Hcd/@Test/Hcd.Host.Test/Tests/{{Module}}/{{Entities}}/{{Entity}}UpdateTests.cs
+enable: {{useIntegrationTests}}
+{{/meta}}
+using Hcd.Contract.Requests.{{Module}}.{{Entities}};
+using Hcd.Host.Test.Factories.{{Module}};
+using Hcd.Host.Test.Setup;
+using Hcd.Host.Test.Stores.{{Module}};
+using Esg.Shared.Test.Integration;
+
+namespace Hcd.Host.Test.Tests.{{Module}}.{{Entities}};
+
+public class {{Entity}}UpdateTests(WebApplication<{{App}}AppFactory, Program> app) : {{App}}Test(app)
+{
+    private const string _endpoint = "/api/v1/{{param entities}}";
+
+    [Fact]
+    public async Task ShouldUpdateCorrectly()
+    {
+        var factory = new {{Entity}}Factory(AuthenticatedClient);
+        var new{{Entity}} = await factory.Create();
+
+        var request = new {{Entity}}UpdateRequest()
+        {
+            Id = new{{Entity}}.Id,
+            // TODO: Update the request properties
+            Name = throw new System.NotImplementedException()
+        };
+
+        var updateResponse = await AuthenticatedClient.PatchAsJsonAsync($"{_endpoint}/{request.Id}", request);
+        updateResponse.EnsureSuccessStatusCode();
+        Assert.Equal(System.Net.HttpStatusCode.OK, updateResponse.StatusCode);
+
+        var store = new {{Entity}}Store(AuthenticatedClient);
+        var updated{{Entity}} = await store.GetOne(request.Id);
+        Assert.Equal(request.Name, updated{{Entity}}.Name);
+    }
+}

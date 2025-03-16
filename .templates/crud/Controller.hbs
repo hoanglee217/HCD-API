@@ -1,0 +1,66 @@
+{{#meta}}
+output: src/Hcd/Hcd.Host/Controllers/{{Entities}}Controller.cs
+enable: {{useController}}
+{{/meta}}
+using Hcd.Common.Requests.{{Module}}.{{Entity}};
+using Hcd.Data.Entities.{{Module}};
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Hcd.Api.Controllers;
+
+[ApiController]
+[Route("api/{{Entity}}")]
+[Authorize]
+public class {{Entity}}Controller(IMediator mediator) : ControllerBase
+{
+    private readonly IMediator _mediator = mediator;
+{{#if useGetAllDtos}}
+    [HttpGet]
+    public async Task<IActionResult<List<{{Entity}}>>> GetAll{{Entities}}(GetAll{{Entity}}Request request)
+    {
+        var response = await _mediator.Send(request);
+        return Ok(response);
+    }
+{{/if}}
+
+{{#if useGetDetailDtos}}
+    [HttpGet("{id}")]
+    public async Task<IActionResult<{{Entity}}>> GetDetail{{Entity}}(GetDetail{{Entity}}Request request)
+    {
+        var request = new GetDetail{{Entity}}Request { Id = id };
+        var response = await _mediator.Send(request);
+        return Ok(response);
+    }
+{{/if}}
+
+{{#if useCreateDtos}}
+    [HttpPost]
+    public async Task<IActionResult<{{Entity}}>> Create{{Entity}}([FromBody] Create{{Entity}}Request request)
+    {
+        var response = await _mediator.Send(request);
+        return Ok(response);
+    }
+{{/if}}
+
+{{#if useUpdateDtos}}
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Update{{Entity}}(Guid id, [FromBody] Update{{Entity}}Request request)
+    {
+        request.Id = id;
+        var response = await _mediator.Send(request);
+        return Ok(response);
+    }
+{{/if}}
+
+{{#if useDeleteDtos}}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete{{Entity}}(Guid id)
+    {
+        var request = new Delete{{Entity}}Request { Id = id };
+        await _mediator.Send(request);
+        return Ok();
+    }
+{{/if}}
+}

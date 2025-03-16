@@ -1,0 +1,17 @@
+﻿{{#meta}}
+output: src/Hcd/Hcd.Api/RequestHandler/{{Module}}/{{Entities}}/GetDetail{{Entity}}Handler.cs
+enable: {{useGetDetailDtos}}
+{{/meta}}
+using Hcd.Common.Requests.{{Module}}.{{Entities}};
+using Hcd.Application.Services.{{Module}};
+using MediatR;
+
+namespace Hcd.Api.RequestHandler.{{Module}}.{{Entities}};
+
+public class GetDetail{{Entity}}Handler({{Entity}}Service {{entity}}Service) : IRequestHandler<GetDetail{{Entity}}Request, GetDetail{{Entity}}Response>
+{
+    public Task<GetDetail{{Entity}}Response> Handle(GetDetail{{Entity}}Request request, CancellationToken cancellationToken)
+    {
+        return {{entity}}Service.GetDetail{{Entity}}(request);
+    }
+}
