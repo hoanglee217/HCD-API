@@ -11,6 +11,7 @@ namespace Hcd.Common
         public static readonly string DbUser = Environment.GetEnvironmentVariable("DB_USER") ?? throw new NotFoundException("DB_USER is not set in the .env file.");
         public static readonly string DbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new NotFoundException("DB_PASSWORD is not set in the .env file.");
         public static readonly string ApiBaseUrl = Environment.GetEnvironmentVariable("API_BASE_URL") ?? throw new NotFoundException("API_BASE_URL is not set in the .env file.");
+        public static readonly string ApiKey = Environment.GetEnvironmentVariable("API_KEY") ?? throw new NotFoundException("API_KEY is not set in the .env file.");
 
         public static readonly string JwtAccessSecret = Environment.GetEnvironmentVariable("JWT_ACCESS_SECRET") ?? throw new NotFoundException("JWT_ACCESS_SECRET is not set in the .env file.");
         public static readonly string JwtRefreshSecret = Environment.GetEnvironmentVariable("JWT_REFRESH_SECRET") ?? throw new NotFoundException("JWT_REFRESH_SECRET is not set in the .env file.");

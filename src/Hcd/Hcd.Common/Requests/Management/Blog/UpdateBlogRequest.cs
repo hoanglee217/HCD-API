@@ -8,12 +8,11 @@ public class UpdateBlogRequest : IRequest<UpdateBlogResponse>
     public Guid Id { get; set; }
     public required string Title { get; set; }
     public string? Content { get; set; }
-    public string? Thumbnail { get; set; }
-    public int Rating { get; set; }
     public required string Slug { get; set; }
+    public string? Thumbnail { get; set; }
     public BlogStatusEnums Status { get; set; }
-    public UserDto User { get; set; } = new UserDto();
-    public ICollection<BlogCategortDto> BlogCategories { get; set; } = new List<BlogCategortDto>();
+    public List<Guid>? Categories { get; set; }
+    public List<string>? Tags { get; set; }
 };
 public class UpdateBlogResponse
 {
@@ -25,5 +24,6 @@ public class UpdateBlogResponse
     public required string Slug { get; set; }
     public BlogStatusEnums Status { get; set; }
     public UserDto User { get; set; } = new UserDto();
-    public ICollection<BlogCategortDto> BlogCategories { get; set; } = new List<BlogCategortDto>();
+    public ICollection<BlogCategoryDto> BlogCategories { get; set; } = new List<BlogCategoryDto>();
+    public ICollection<BlogTagDto> BlogTags { get; set; } = new List<BlogTagDto>();
 };

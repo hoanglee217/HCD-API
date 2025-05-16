@@ -16,5 +16,6 @@ namespace Hcd.Data.Entities.Management
         public required Guid UserId { get; set; }
         public virtual required User User { get; set; }
         public virtual ICollection<BlogCategory> BlogCategories { get; set; } = new List<BlogCategory>();
+        public virtual ICollection<BlogTag> BlogTags { get; set; } = new List<BlogTag>();
     }
 }

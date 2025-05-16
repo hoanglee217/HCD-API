@@ -12,7 +12,7 @@ namespace Hcd.Application.Mappings
             TypeAdapterConfig<Blog, GetAllBlogsResponseItem>
             .NewConfig()
             .Map(dest => dest.BlogCategories, src =>
-                src.BlogCategories.Select(bc => new BlogCategortDto
+                src.BlogCategories.Select(bc => new BlogCategoryDto
                 {
                     Id = bc.Id,
                     Category = bc.Category != null ? new CategoryDto

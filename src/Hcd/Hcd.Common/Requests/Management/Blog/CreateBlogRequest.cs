@@ -7,11 +7,11 @@ public class CreateBlogRequest : IRequest<CreateBlogResponse>
 {
     public required string Title { get; set; }
     public string? Content { get; set; }
-    public string? Thumbnail { get; set; }
     public required string Slug { get; set; }
+    public string? Thumbnail { get; set; }
     public BlogStatusEnums Status { get; set; }
-    public required Guid CategoryId { get; set; }
-    public required Guid UserId { get; set; }
+    public List<Guid>? Categories { get; set; }
+    public List<string>? Tags { get; set; }
 };
 public class CreateBlogResponse
 {
@@ -20,8 +20,9 @@ public class CreateBlogResponse
     public string? Content { get; set; }
     public string? Thumbnail { get; set; }
     public int Rating { get; set; }
-    public BlogStatusEnums Status { get; set; }
     public required string Slug { get; set; }
-    public required Guid CategoryId { get; set; }
-    public required Guid UserId { get; set; }
+    public BlogStatusEnums Status { get; set; }
+    public UserDto User { get; set; } = new UserDto();
+    public ICollection<BlogCategoryDto> BlogCategories { get; set; } = new List<BlogCategoryDto>();
+    public ICollection<BlogTagDto> BlogTags { get; set; } = new List<BlogTagDto>();
 };

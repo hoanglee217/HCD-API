@@ -17,5 +17,6 @@ public class GetDetailBlogsResponse
     public required string Slug { get; set; }
     public BlogStatusEnums Status { get; set; }
     public UserDto User { get; set; } = new UserDto();
-    public ICollection<BlogCategortDto> BlogCategories { get; set; } = new List<BlogCategortDto>();
+    public ICollection<BlogCategoryDto> BlogCategories { get; set; } = new List<BlogCategoryDto>();
+    public ICollection<BlogTagDto> BlogTags { get; set; } = new List<BlogTagDto>();
 };

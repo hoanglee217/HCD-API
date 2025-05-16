@@ -13,11 +13,17 @@ namespace Hcd.Application.Services.Management
 
         public async Task<GetAllTagsResponse> GetAllTags(GetAllTagsRequest request)
         {
-            var tag = TagManager.GetAll(request.Search, request.Filter);
-            var paginationResponse = await PaginationResponse<Tag>.Create(
-                tag,
-                request
-            );
+            var query = TagManager.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                query = query.Where(o => o.Name.Contains(request.Search));
+            }
+
+            query = query.Include(t => t.BlogTags)
+                .ThenInclude(bt => bt.Blog);
+
+            var paginationResponse = await PaginationResponse<Tag>.Create(query, request);
 
             return Mapper.Map<GetAllTagsResponse>(paginationResponse);
         }

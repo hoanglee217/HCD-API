@@ -1,5 +1,5 @@
 {{#meta}}
-output: src/Hcd/Hcd.Host/Controllers/{{Entities}}Controller.cs
+output: src/Hcd/Hcd.Api/Controllers/{{Entity}}Controller.cs
 enable: {{useController}}
 {{/meta}}
 using Hcd.Common.Requests.{{Module}}.{{Entity}};
@@ -11,14 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hcd.Api.Controllers;
 
 [ApiController]
-[Route("api/{{Entity}}")]
+[Route("api/{{entities}}")]
 [Authorize]
 public class {{Entity}}Controller(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
 {{#if useGetAllDtos}}
     [HttpGet]
-    public async Task<IActionResult<List<{{Entity}}>>> GetAll{{Entities}}(GetAll{{Entity}}Request request)
+    public async Task<ActionResult<List<{{Entity}}>>> GetAll{{Entities}}([FromQuery] GetAll{{Entity}}Request request)
     {
         var response = await _mediator.Send(request);
         return Ok(response);
@@ -27,7 +27,7 @@ public class {{Entity}}Controller(IMediator mediator) : ControllerBase
 
 {{#if useGetDetailDtos}}
     [HttpGet("{id}")]
-    public async Task<IActionResult<{{Entity}}>> GetDetail{{Entity}}(GetDetail{{Entity}}Request request)
+    public async Task<ActionResult<{{Entity}}>> GetDetail{{Entity}}(Guid id)
     {
         var request = new GetDetail{{Entity}}Request { Id = id };
         var response = await _mediator.Send(request);
@@ -37,7 +37,7 @@ public class {{Entity}}Controller(IMediator mediator) : ControllerBase
 
 {{#if useCreateDtos}}
     [HttpPost]
-    public async Task<IActionResult<{{Entity}}>> Create{{Entity}}([FromBody] Create{{Entity}}Request request)
+    public async Task<ActionResult<{{Entity}}>> Create{{Entity}}([FromBody] Create{{Entity}}Request request)
     {
         var response = await _mediator.Send(request);
         return Ok(response);

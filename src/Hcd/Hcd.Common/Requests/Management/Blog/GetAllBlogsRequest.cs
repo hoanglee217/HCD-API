@@ -18,7 +18,7 @@ public class GetAllBlogsResponseItem
     public required string Slug { get; set; }
     public BlogStatusEnums Status { get; set; }
     public UserDto User { get; set; } = new UserDto();
-    public ICollection<BlogCategortDto> BlogCategories { get; set; } = new List<BlogCategortDto>();
+    public ICollection<BlogCategoryDto> BlogCategories { get; set; } = new List<BlogCategoryDto>();
 };
 
 public class UserDto
@@ -27,7 +27,7 @@ public class UserDto
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
 }
-public class BlogCategortDto
+public class BlogCategoryDto
 {
     public Guid Id { get; set; }
     public CategoryDto? Category { get; set; }
@@ -35,6 +35,17 @@ public class BlogCategortDto
 public class CategoryDto
 {
     public Guid Id { get; set; }
+    public string? Name { get; set; }
+    public CategoryEnums? CategoryEnums { get; set; }
+}
+
+public class BlogTagDto
+{
+    public Guid Id { get; set; }
+    public TagDto? Tag { get; set; }
+}
+public class TagDto
+{
+    public Guid? Id { get; set; }
     public required string Name { get; set; }
-    public required CategoryEnums CategoryEnums { get; set; }
 }

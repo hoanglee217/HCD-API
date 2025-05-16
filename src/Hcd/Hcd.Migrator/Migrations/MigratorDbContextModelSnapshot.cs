@@ -178,6 +178,48 @@ namespace Hcd.Migrator.Migrations
                     b.ToTable("BlogCategories");
                 });
 
+            modelBuilder.Entity("Hcd.Data.Entities.Management.BlogTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("BlogTags");
+                });
+
             modelBuilder.Entity("Hcd.Data.Entities.Management.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -275,9 +317,6 @@ namespace Hcd.Migrator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BlogId")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("char(36)");
 
@@ -305,9 +344,67 @@ namespace Hcd.Migrator.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlogId");
-
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Hcd.Data.Entities.System.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AltText")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Format")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long?>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Hcd.Data.Entities.System.Option", b =>
@@ -413,6 +510,25 @@ namespace Hcd.Migrator.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Hcd.Data.Entities.Management.BlogTag", b =>
+                {
+                    b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
+                        .WithMany("BlogTags")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hcd.Data.Entities.Management.Tag", "Tag")
+                        .WithMany("BlogTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("Hcd.Data.Entities.Management.Comment", b =>
                 {
                     b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
@@ -432,17 +548,6 @@ namespace Hcd.Migrator.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Hcd.Data.Entities.Management.Tag", b =>
-                {
-                    b.HasOne("Hcd.Data.Entities.Management.Blog", "Blog")
-                        .WithMany()
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-                });
-
             modelBuilder.Entity("Hcd.Data.Entities.Authentication.User", b =>
                 {
                     b.Navigation("Blogs");
@@ -451,11 +556,18 @@ namespace Hcd.Migrator.Migrations
             modelBuilder.Entity("Hcd.Data.Entities.Management.Blog", b =>
                 {
                     b.Navigation("BlogCategories");
+
+                    b.Navigation("BlogTags");
                 });
 
             modelBuilder.Entity("Hcd.Data.Entities.Management.Category", b =>
                 {
                     b.Navigation("BlogCategories");
+                });
+
+            modelBuilder.Entity("Hcd.Data.Entities.Management.Tag", b =>
+                {
+                    b.Navigation("BlogTags");
                 });
 #pragma warning restore 612, 618
         }

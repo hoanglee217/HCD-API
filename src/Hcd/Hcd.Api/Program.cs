@@ -48,6 +48,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UseStaticFiles(); // Bật phục vụ file tĩnh
+
     // Use CORS middleware
     app.UseCors("AllowFrontend");
     app.UseExceptionHandler(opt => { });

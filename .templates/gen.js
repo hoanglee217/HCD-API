@@ -131,7 +131,6 @@ module.exports = async (plugin) => {
     //     const { module } = await askPublisherModules();
     //     moduleName = module;
     // }
-    console.log(moduleName);
     const entityCases = plugin.transformCases({
       source: answers.entity,
       cases: ["camel", "camelPlural", "pascal", "pascalPlural", "constant"],

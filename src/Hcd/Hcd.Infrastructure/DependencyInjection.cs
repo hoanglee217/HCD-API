@@ -19,7 +19,6 @@ using Hcd.Application.Services.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Hcd.Application.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Hcd.Application.Mappings;
 
 namespace Hcd.Infrastructure
 {
@@ -32,6 +31,7 @@ namespace Hcd.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); // Replace with your actual UnitOfWork implementation
             services.AddTransient<ICurrentUserService, CurrentUserService>(); // Replace with your actual service
+            services.AddTransient<ISlugGenerator, SlugGenerator>(); // Replace with your actual service
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>(); // Replace with your actual JWT token generator
             services.AddScoped<IPasswordHandler, PasswordHandler>(); // Replace with your actual password handler
 

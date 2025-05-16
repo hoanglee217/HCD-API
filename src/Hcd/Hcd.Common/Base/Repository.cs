@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Hcd.Application.Common.Interfaces.Services;
 using Hcd.Common.Attributes;
 using Hcd.Common.Exceptions;
@@ -112,12 +113,6 @@ public abstract class RepositoryBase<TEntity, TKey>(
         return Task.FromResult(entity);
     }
 
-    public async Task AddRangeAsync(List<TEntity> entities)
-    {
-        entities.ForEach(this.SetCreateAuditProperties);
-        await dbContext.Set<TEntity>().AddRangeAsync(entities);
-    }
-
     public void UpdateRange(List<TEntity> entities)
     {
         entities.ForEach(this.SetUpdateAuditProperties);
@@ -128,6 +123,11 @@ public abstract class RepositoryBase<TEntity, TKey>(
     {
         entities.ForEach(this.SetCreateAuditProperties);
         dbContext.Set<TEntity>().AddRange(entities);
+    }
+    public async Task AddRangeAsync(List<TEntity> entities)
+    {
+        entities.ForEach(this.SetCreateAuditProperties);
+        await dbContext.Set<TEntity>().AddRangeAsync(entities);
     }
 
     public TEntity Remove(TKey id)

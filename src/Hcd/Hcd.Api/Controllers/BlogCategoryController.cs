@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hcd.Api.Controllers
 {
     [ApiController]
-    [Route("api/BlogCategory")]
+    [Route("api/blog-category")]
     [Authorize]
     public class BlogCategoryController(IMediator mediator) : ControllerBase
     {

@@ -21,6 +21,7 @@ public abstract class ApplicationService : IApplicationService
     protected IJwtTokenGenerator JwtTokenGenerator => _serviceProvider.GetRequiredService<IJwtTokenGenerator>();
     protected IPasswordHandler PasswordHandler => _serviceProvider.GetRequiredService<IPasswordHandler>();
     protected IDateTimeProvider DateTimeProvider => _serviceProvider.GetRequiredService<IDateTimeProvider>();
+    protected ISlugGenerator SlugGenerator => _serviceProvider.GetRequiredService<ISlugGenerator>();
 
     public TService GetService<TService>() where TService : class
     {

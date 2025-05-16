@@ -14,21 +14,31 @@ namespace Hcd.Application.Services.Management
 
         public async Task<GetAllBlogsResponse> GetAllBlogs(GetAllBlogsRequest request)
         {
-            var blogs = BlogManager.GetAll().Include(b => b.User).Include(b => b.BlogCategories).ThenInclude(bc => bc.Category);
+            var blogs = BlogManager.GetAll();
 
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                blogs = blogs.Where(o => o.Title.Contains(request.Search));
+            }
+
+            var responseBlog = blogs.Include(b => b.User)
+            .Include(b => b.BlogCategories).ThenInclude(bc => bc.Category).OrderByDescending(o => o.Id);
+            
             var paginationResponse = await PaginationResponse<Blog>.Create(
-            blogs,
+            responseBlog,
             request
         );
-            Console.WriteLine($"Debug: {paginationResponse.Items.FirstOrDefault()?.BlogCategories.Count} categories found");
-
             var response = Mapper.Map<GetAllBlogsResponse>(paginationResponse);
             return response;
         }
 
         public async Task<GetDetailBlogsResponse> GetDetailBlog(GetDetailBlogsRequest request)
         {
-            var blog = await BlogManager.GetAll().Include(b => b.User).Include(b => b.BlogCategories).ThenInclude(bc => bc.Category).FirstOrDefaultAsync(o => o.Id == request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
+            var blog = await BlogManager.GetAll()
+            .Include(b => b.User)
+            .Include(b => b.BlogCategories).ThenInclude(bc => bc.Category)
+            .Include(b => b.BlogTags).ThenInclude(bc => bc.Tag)
+            .FirstOrDefaultAsync(o => o.Id == request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
 
             return Mapper.Map<GetDetailBlogsResponse>(blog);
         }
@@ -37,12 +47,17 @@ namespace Hcd.Application.Services.Management
         {
             var newBlog = request.Adapt<Blog>();
             newBlog.UserId = CurrentUser.GetCurrentUserId();
-
             await BlogManager.AddAsync(newBlog);
 
             await UnitOfWork.SaveChangesAsync();
 
             var response = Mapper.Map<CreateBlogResponse>(newBlog);
+
+            await BlogManager.UpdateCategoriesAsync(response.Id, request.Categories);
+            await BlogManager.UpdateTagsAsync(response.Id, request.Tags);
+
+            await UnitOfWork.SaveChangesAsync();
+
             return response;
         }
 
@@ -56,10 +71,15 @@ namespace Hcd.Application.Services.Management
         public async Task<UpdateBlogResponse> UpdateBlog(UpdateBlogRequest request)
         {
             var blog = await BlogManager.FindAsync(request.Id) ?? throw new NotFoundException($"blog with {request.Id} not found!!");
-            var updatedBlog = request.Adapt(blog);
+
+            await BlogManager.UpdateCategoriesAsync(blog.Id, request.Categories);
+
+            await BlogManager.UpdateTagsAsync(blog.Id, request.Tags);
 
             await BlogManager.Update(blog);
             await UnitOfWork.SaveChangesAsync();
+
+            var updatedBlog = request.Adapt(blog);
 
             return Mapper.Map<UpdateBlogResponse>(updatedBlog);
         }
